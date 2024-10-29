@@ -1,0 +1,73 @@
+{
+  "name": "nxt-compiler",
+  "displayName": "NXT Compiler",
+  "description": "This is an extension, which add buttons for compiling and downloading code to your NXT. It uses the nbc compiler",
+  "version": "0.0.1",
+  "icon": "media/icon.png",
+  "engines": {
+    "vscode": "^1.76.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [],
+  "main": "./extension.js",
+  "contributes": {
+    "menus": {
+      "editor/title": [
+        {
+          "when": "true",
+          "command": "nxt-compiler.sendToNXT",
+          "group": "navigation"
+        },
+        {
+          "when": "true",
+          "command": "nxt-compiler.sendToNXTAndRun",
+          "group": "navigation"
+        }
+      ]
+    },
+    "commands": [{
+      "command": "nxt-compiler.sendToNXT",
+      "title": "Send to NXT",
+      "icon": {
+        "dark": "./media/download-dark.svg",
+        "light": "./media/download-light.svg"
+      },
+      "group": "navigation",
+      "menus": "editor/title"
+    },
+    {
+      "command": "nxt-compiler.sendToNXTAndRun",
+      "title": "Send to NXT and run",
+      "icon": {
+        "dark": "./media/run-dark.svg",
+        "light": "./media/run-light.svg"
+      },
+      "group": "navigation",
+      "menus": "editor/title"
+    },
+    {
+      "command": "nxt-compiler.installFantomDriver",
+      "title": "Install Fantom Driver",
+      "group": "navigation",
+      "menus": "editor/title"
+    }]
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "pretest": "npm run lint",
+    "test": "node ./test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.76.0",
+    "@types/glob": "^8.1.0",
+    "@types/mocha": "^10.0.1",
+    "@types/node": "16.x",
+    "eslint": "^8.34.0",
+    "glob": "^8.1.0",
+    "mocha": "^10.2.0",
+    "typescript": "^4.9.5",
+    "@vscode/test-electron": "^2.2.3"
+  }
+}
