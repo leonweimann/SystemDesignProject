@@ -1,0 +1,29 @@
+# Ignore compiled Java class files
+*.class
+
+# Ignore VS Code settings
+.vscode/
+
+# Ignore Eclipse settings
+.project
+.classpath
+.settings/
+
+# Ignore build outputs
+bin/
+
+# Ignore LeJOS libraries or generated files
+lib/
+out/
+*.nxj
+*.jar
+
+# Ignore logs and temporary files
+*.log
+*.tmp
+
+# Ignore MacOS files
+.DS_Store
+
+# Ignore Windows Thumbs.db
+Thumbs.db

@@ -1,0 +1,63 @@
+Class 0: java.lang.Object
+Class 1: java.lang.Throwable
+Class 2: java.lang.Error
+Class 3: java.lang.OutOfMemoryError
+Class 4: boolean
+Class 5: char
+Class 6: float
+Class 7: double
+Class 8: byte
+Class 9: short
+Class 10: int
+Class 11: long
+Class 12: void
+Class 13: java.lang.Object[]
+Class 14: java.lang.NoSuchMethodError
+Class 15: java.lang.StackOverflowError
+Class 16: java.lang.NullPointerException
+Class 17: boolean[]
+Class 18: char[]
+Class 19: float[]
+Class 20: double[]
+Class 21: byte[]
+Class 22: short[]
+Class 23: int[]
+Class 24: long[]
+Class 25: reserved
+Class 26: java.lang.ClassCastException
+Class 27: java.lang.ArithmeticException
+Class 28: java.lang.ArrayIndexOutOfBoundsException
+Class 29: java.lang.IllegalArgumentException
+Class 30: java.lang.InterruptedException
+Class 31: java.lang.IllegalStateException
+Class 32: java.lang.IllegalMonitorStateException
+Class 33: java.lang.ThreadDeath
+.... other classes omitted
+Method 0: java.lang.Object.<init>() PC 1976 Signature id 2
+Method 1: java.lang.Object.getClass() PC 1977 Signature id 121
+Method 2: java.lang.Object.toString() PC 1985 Signature id 123
+Method 3: java.lang.Throwable.i<init>() PC 2013 Signature id 2
+Method 4: java.lang.Throwable.<init>(java.lang.String) PC 2023 Signature id 124
+Method 5: java.lang.Throwable.getLocalizedMessage() PC 2038 Signature id 125
+Method 6: java.lang.Throwable.getMessage() PC 2043 Signature id 29
+Method 7: java.lang.Throwable.toString() PC 2048 Signature id 123
+Method 8: java.lang.Throwable.fillInStackTrace() PC 2096 Signature id 126
+Method 9: java.lang.NullPointerException.<init>() PC 2109 Signature id 2
+Method 10: java.lang.Class.isInterface() PC 2114 Signature id 133
+Method 11: java.lang.Class.toString() PC 2131 Signature id 123
+Method 12: java.lang.String.<init>(int) PC 2177 Signature id 128
+Method 13: java.lang.String.<init>(char[], int, int) PC 2189 Signature id 141
+Method 14: java.lang.String.charAt(int) PC 2206 Signature id 145
+Method 15: java.lang.String.length() PC 2231 Signature id 155
+Method 16: java.lang.String.toString() PC 2237 Signature id 123
+Method 17: java.lang.String.valueOf(java.lang.Object) PC 2239 Signature id 167
+Method 18: java.lang.Thread.run() PC 2253 Signature id 1
+Method 19: java.lang.Thread.currentThread() Native id 12
+Method 20: ExceptionTest.m1() PC 2273 Signature id 175
+Method 21: ExceptionTest.m2() PC 2288 Signature id 176
+Method 22: ExceptionTest.main(java.lang.String[]) PC 2292 Signature id 0
+Method 23: lejos.nxt.VM.<clinit> PC 2304 Signature id 3
+Method 24: lejos.nxt.VM.<init>() PC 2323 Signature id 2
+Method 25: lejos.nxt.VM.getVM() PC 2358 Signature id 177
+Method 26: lejos.nxt.VM.memPeek(int, int, int) Native id 103
+.... other methods omitted
