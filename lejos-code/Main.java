@@ -20,7 +20,7 @@ public class Main {
             while (run()) {
                 // Main robot loop continues as long as run() returns true
             }
-        } catch (BootingException e) {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
@@ -40,6 +40,7 @@ public class Main {
         System.out.println("Ready for take off");
         System.out.println("Press any button to start");
         Button.waitForAnyPress(); // Wait for the user to press any button to start
+        System.out.println("> Started");
     }
 
     /**
