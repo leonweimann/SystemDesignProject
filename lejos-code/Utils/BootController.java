@@ -1,16 +1,39 @@
+/**
+ * Package containing utility classes for robot operations.
+ */
 package Utils;
 
 import Exceptions.BootingException;
 import Utils.BootController;
 import lejos.nxt.Button;
 
+/**
+ * The {@code BootController} class manages the booting process of the robot.
+ * It performs the necessary setup phases and waits for user input to start the robot.
+ */
 public class BootController {
-    public boolean hasBooted = false;
+    /**
+     * Indicates whether the robot has successfully booted.
+     */
+    public boolean hasBooted;
+
+    /**
+     * Stores any exception that occurs during the booting process.
+     */
     protected BootingException bootingException;
 
+    /**
+     * Constructs a new {@code BootController}.
+     */
     public BootController() {
     }
 
+    /**
+     * Boots the robot by executing setup phases. If an issue occurs during the booting,
+     * a {@link BootingException} is thrown.
+     *
+     * @throws BootingException if there is an issue during the booting process.
+     */
     public void boot() throws BootingException {
         System.out.println("Start roboting .");
         // Setup phase 1
@@ -32,7 +55,14 @@ public class BootController {
         System.out.println("> Started");
     }
 
+    /**
+     * Throws a {@link BootingException} and updates the state of the boot controller.
+     *
+     * @param e the {@code BootingException} to be thrown.
+     * @throws BootingException the provided booting exception.
+     */
     private void throwBootException(BootingException e) throws BootingException {
+        hasBooted = false;
         bootingException = e;
         throw e;
     }
