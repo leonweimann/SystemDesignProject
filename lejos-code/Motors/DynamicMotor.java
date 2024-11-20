@@ -3,15 +3,15 @@ package Motors;
 import lejos.nxt.MotorPort;
 import lejos.nxt.NXTRegulatedMotor;
 
-// motor.getRotationSpeed() ?
-// what is Tacho ?
+// motor.getRotationSpeed()  ?
+// what is Tacho  ?
 
 /**
  * The DynamicMotor class represents a motor with dynamic speed adjustment
  * capabilities.
  * It manages acceleration and deceleration to ensure smooth movement.
  */
-class DynamicMotor {
+public class DynamicMotor {
     private NXTRegulatedMotor motor;
     private int currentSpeed = 50; // Initial speed for gradual acceleration
     private int accelerationStep = 20; // Step size for acceleration

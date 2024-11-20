@@ -1,7 +1,7 @@
-package Motors;
+package Utils;
 
+import Motors.DynamicMotor;
 import lejos.nxt.MotorPort;
-import lejos.robotics.Touch;
 
 /**
  * The MotorController class is responsible for controlling the left and right

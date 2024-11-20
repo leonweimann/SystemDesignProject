@@ -1,4 +1,4 @@
-package Motors;
+package Utils;
 
 import lejos.nxt.SensorPort;
 import lejos.nxt.TouchSensor;;
