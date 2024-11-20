@@ -1,4 +1,5 @@
-import Exceptions.BootingException;
+import Utils.*;
+
 import lejos.nxt.Button;
 import lejos.nxt.LCD;
 
@@ -9,13 +10,14 @@ import lejos.nxt.LCD;
  * a user presses a button to stop the program.
  * 
  * @author leonweimann
- * @version 1.3
+ * @version 1.4
  */
 public class Main {
+    private static BootController bootController = new BootController();
 
     public static void main(String[] args) {
         try {
-            boot();
+            bootController.boot();
 
             // Main execution loop
             while (run()) {
@@ -24,25 +26,6 @@ public class Main {
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-    }
-
-    /**
-     * Handles the boot sequence of the robot, displaying messages to indicate
-     * progress.
-     * 
-     * @throws BootingException if the boot process encounters an error.
-     */
-    private static void boot() throws BootingException {
-        System.out.println("Start roboting .");
-        // Setup phase 1
-        System.out.println("Start roboting ..");
-        // Setup phase 2
-        System.out.println("Start roboting ...");
-        // Setup phase 3
-        System.out.println("Ready for take off");
-        System.out.println("Press any button to start");
-        Button.waitForAnyPress(); // Wait for the user to press any button to start
-        System.out.println("> Started");
     }
 
     /**
