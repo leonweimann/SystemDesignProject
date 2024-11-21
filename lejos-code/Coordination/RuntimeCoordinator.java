@@ -1,9 +1,9 @@
 /**
  * Package containing utility classes for robot operations.
  */
-package Controlling;
+package Coordination;
 
-import Controlling.BootController;
+import Coordination.RuntimeCoordinator;
 import Exceptions.BootingException;
 import lejos.nxt.Button;
 
@@ -11,7 +11,7 @@ import lejos.nxt.Button;
  * The {@code BootController} class manages the booting process of the robot.
  * It performs the necessary setup phases and waits for user input to start the robot.
  */
-public class BootController {
+public class RuntimeCoordinator {
     /**
      * Indicates whether the robot has successfully booted.
      */
@@ -25,7 +25,7 @@ public class BootController {
     /**
      * Constructs a new {@code BootController}.
      */
-    public BootController() {
+    public RuntimeCoordinator() {
         hasBooted = false;
     }
 
