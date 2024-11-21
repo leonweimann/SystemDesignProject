@@ -1,5 +1,5 @@
-import Utils.*;
-
+import Controlling.*;
+import Coordination.TaskCoordinator;
 import lejos.nxt.Button;
 import lejos.nxt.LCD;
 
@@ -20,7 +20,7 @@ public class Main {
             bootController.boot();
 
             // Main execution loop
-            while (run()) {
+            while (shouldRun()) {
                 // Main robot loop continues as long as run() returns true
             }
         } catch (Exception e) {
@@ -35,7 +35,7 @@ public class Main {
      * @return true if the loop should continue, false if the user has pressed a
      *         button.
      */
-    private static boolean run() {
+    private static boolean shouldRun() {
         // Display message on the LCD screen
         LCD.clear();
         LCD.drawString("Press any button to cancel", 0, 0);

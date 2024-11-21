@@ -1,10 +1,10 @@
 /**
  * Package containing utility classes for robot operations.
  */
-package Utils;
+package Controlling;
 
+import Controlling.BootController;
 import Exceptions.BootingException;
-import Utils.BootController;
 import lejos.nxt.Button;
 
 /**

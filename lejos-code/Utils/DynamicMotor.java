@@ -1,4 +1,4 @@
-package Motors;
+package Utils;
 
 import lejos.nxt.MotorPort;
 import lejos.nxt.NXTRegulatedMotor;

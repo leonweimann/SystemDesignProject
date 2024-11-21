@@ -1,4 +1,4 @@
-package Motors;
+package Utils;
 
 public class LiftMotor {
     

@@ -1,6 +1,6 @@
-package Utils;
+package Controlling;
 
-import Motors.DynamicMotor;
+import Utils.DynamicMotor;
 import lejos.nxt.MotorPort;
 
 /**
