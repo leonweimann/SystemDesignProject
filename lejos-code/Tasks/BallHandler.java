@@ -1,5 +1,9 @@
 package Tasks;
 
-public class BallHandler {
+public class BallHandler implements Task {
+    @Override
+    public void run() {
+        
+    }
     
 }

@@ -1,7 +1,7 @@
 package Utils;
 
 import lejos.nxt.SensorPort;
-import lejos.nxt.TouchSensor;;
+import lejos.nxt.TouchSensor;
 
 public class TouchController {
     private TouchSensor sensor;
