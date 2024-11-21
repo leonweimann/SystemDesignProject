@@ -20,12 +20,13 @@ public class BootController {
     /**
      * Stores any exception that occurs during the booting process.
      */
-    protected BootingException bootingException;
+    public BootingException bootingException;
 
     /**
      * Constructs a new {@code BootController}.
      */
     public BootController() {
+        hasBooted = false;
     }
 
     /**
