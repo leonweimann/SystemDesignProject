@@ -1,4 +1,5 @@
 import Coordination.RuntimeCoordinator;
+import Coordination.TaskCoordinator;
 
 /**
  * The Main class is responsible for initializing and running the robot program.
@@ -6,7 +7,7 @@ import Coordination.RuntimeCoordinator;
  * until a user presses a button to stop the program.
  * 
  * @author leonweimann
- * @version 1.5
+ * @version 1.6
  */
 public class Main {
     private static RuntimeCoordinator runtime = new RuntimeCoordinator();
@@ -16,7 +17,7 @@ public class Main {
             runtime.boot();
 
             while (runtime.shouldRun()) {
-                
+                TaskCoordinator.execute();
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());

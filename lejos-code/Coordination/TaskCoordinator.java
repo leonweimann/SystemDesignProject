@@ -3,43 +3,35 @@ package Coordination;
 import Tasks.*;
 
 /**
- * The TaskCoordinator class is responsible for managing the current phase of
- * the system and providing the appropriate task based on the current phase.
+ * The TaskCoordinator class is responsible for managing the execution of tasks
+ * within the system. It follows the Singleton design pattern to ensure that
+ * only one instance of the TaskCoordinator exists. The class maintains the
+ * current phase of the system and provides methods to execute tasks and update
+ * the phase.
  * 
  * <p>
- * This class follows the Singleton design pattern to ensure that only one
- * instance of TaskCoordinator exists throughout the application.
+ * The TaskCoordinator initializes the system in the BOOTING phase and
+ * transitions through different phases based on the system's state. It
+ * retrieves and runs tasks corresponding to the current phase.
  * </p>
  * 
  * <p>
- * Usage:
- * </p>
+ * Usage example:
  * 
  * <pre>
+ * {@code
  * TaskCoordinator coordinator = TaskCoordinator.getInstance();
- * Phase currentPhase = coordinator.getPhase();
- * Task currentTask = coordinator.getCurrentTask();
+ * coordinator.execute();
+ * }
  * </pre>
- * 
- * <p>
- * Phases are managed internally and can be updated using the
- * {@link #updatePhase()} method.
  * </p>
  * 
- * <p>
- * Tasks are determined based on the current phase and are returned by the
- * {@link #getCurrentTask()} method.
- * </p>
- * 
+ * @version 1.3
  * @author leonweimann
- * @version 1.0
- * 
- * @see Phase
- * @see Task
  */
 public class TaskCoordinator {
     /** Singleton instance of the TaskCoordinator */
-    public static TaskCoordinator instance;
+    private static TaskCoordinator instance;
 
     /** The current phase of the system */
     private Phase currentPhase;
@@ -68,10 +60,20 @@ public class TaskCoordinator {
     /**
      * Returns the current phase of the system.
      * 
-     * @return The current phase.
+     * @return The current phase of the system.
      */
     public Phase getPhase() {
         return currentPhase;
+    }
+
+    /**
+     * Executes the current task by updating the phase and running the task.
+     * This method first updates the phase of the task coordinator and then
+     * retrieves and runs the current task.
+     */
+    public static void execute() {
+        getInstance().updatePhase();
+        getInstance().getCurrentTask().run();
     }
 
     /**
@@ -81,7 +83,7 @@ public class TaskCoordinator {
      * This method should be called regularly in the main while loop to ensure the
      * system transitions to the appropriate phase based on the current state.
      */
-    public void updatePhase() {
+    private void updatePhase() {
         // TODO: Implement phase update logic here ...
     }
 
@@ -90,7 +92,7 @@ public class TaskCoordinator {
      *
      * @return the current task, which is a new instance of LineFollower by default.
      */
-    public Task getCurrentTask() {
+    private Task getCurrentTask() {
         // TODO: Handle all Phase cases ...
         switch (currentPhase) {
             default:
