@@ -1,5 +1,4 @@
 import Controlling.*;
-import Coordination.TaskCoordinator;
 import lejos.nxt.Button;
 import lejos.nxt.LCD;
 
@@ -27,7 +26,7 @@ public class Main {
             System.out.println(e.getMessage());
         }
     }
-
+    
     /**
      * The main run loop of the robot. This method displays instructions to the LCD
      * and checks if the user has pressed any button to cancel the program.
