@@ -1,5 +1,7 @@
 package Controlling;
 
+import javafx.util.Pair;
+
 /**
  * The LightFluctuationController class is responsible for coordinating and
  * managing multiple light sensors.
@@ -21,4 +23,14 @@ package Controlling;
  */
 class LightFluctuationController {
     // TODO: Implement functionality for managing multiple light sensors
+
+    public Pair<Integer, Integer> getLightValues() {
+        return new Pair<>(0, 0);
+    }
+
+    public Pair<Boolean, Boolean> getIsBlack() {
+        return new Pair<>(false, false);
+    }
 }
+
+// TODO: Symbole im boden erkennen!!!
