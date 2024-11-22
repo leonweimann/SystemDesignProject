@@ -1,5 +1,7 @@
 package Controlling;
 
+import Config.Ports;
+
 import Utils.DynamicMotor;
 import lejos.nxt.MotorPort;
 
@@ -15,6 +17,15 @@ import lejos.nxt.MotorPort;
  * @version 2.0
  */
 public class MotorController {
+    private static MotorController instance;
+
+    public static MotorController getInstance() {
+        if (instance == null) {
+            instance = new MotorController(Ports.MOTOR_LEFT, Ports.MOTOR_RIGHT, TouchController.getInstance());
+        }
+        return instance;
+    }
+
     private DynamicMotor leftMotor;
     private DynamicMotor rightMotor;
 
