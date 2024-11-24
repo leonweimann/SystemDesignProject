@@ -35,8 +35,8 @@ public class MotorController {
     private boolean rotationInProgress = false;
     private int baseSpeed = 200; // Default base speed for the robot
 
-    private static final double DISTANCE_PER_ROTATION = 17.5; // cm per full wheel rotation (example value)
-    private static final double ROBOT_TRACK_WIDTH = 15.0; // Distance between the wheels in cm (example value)
+    private static final double DISTANCE_PER_ROTATION = 9.42478; // cm per full wheel rotation
+    private static final double ROBOT_TRACK_WIDTH = 13.0; // Distance between the wheels in cm
 
     /**
      * Constructs a new MotorController instance with the specified motor ports for
