@@ -1,7 +1,6 @@
 package Controlling;
 
-import Config.Ports;
-
+import Coordination.RuntimeCoordinator;
 import Utils.DynamicMotor;
 import lejos.nxt.MotorPort;
 
@@ -17,15 +16,6 @@ import lejos.nxt.MotorPort;
  * @version 2.0
  */
 public class MotorController {
-    private static MotorController instance;
-
-    public static MotorController getInstance() {
-        if (instance == null) {
-            instance = new MotorController(Ports.MOTOR_LEFT, Ports.MOTOR_RIGHT, TouchController.getInstance());
-        }
-        return instance;
-    }
-
     private DynamicMotor leftMotor;
     private DynamicMotor rightMotor;
 
@@ -45,10 +35,10 @@ public class MotorController {
      * @param leftPort  The motor port to which the left motor is connected.
      * @param rightPort The motor port to which the right motor is connected.
      */
-    public MotorController(MotorPort leftPort, MotorPort rightPort, TouchController touchController) {
+    public MotorController(MotorPort leftPort, MotorPort rightPort) {
         this.leftMotor = new DynamicMotor(leftPort);
         this.rightMotor = new DynamicMotor(rightPort);
-        this.touchController = touchController;
+        this.touchController = RuntimeCoordinator.getInstance().touchController;
     }
 
     /**
