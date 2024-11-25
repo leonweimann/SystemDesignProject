@@ -1,5 +1,8 @@
 package Coordination;
 
+import Config.Ports;
+import Controlling.*;
+
 import lejos.nxt.Button;
 import lejos.nxt.LCD;
 
@@ -9,37 +12,45 @@ import lejos.nxt.LCD;
  * necessary setup phases before starting and provides mechanisms to handle
  * user cancellation requests.
  * 
- * <p>Usage example:
+ * <p>
+ * Usage example:
+ * 
  * <pre>
  * {@code
  * RuntimeCoordinator coordinator = new RuntimeCoordinator();
- *     try {
- *         coordinator.boot();
- *         while (coordinator.shouldRun()) {
- *             // Start robot operations
- *         }
- *     } catch (Exception e) {
- *         e.printStackTrace();
+ * try {
+ *     coordinator.boot();
+ *     while (coordinator.shouldRun()) {
+ *         // Start robot operations
  *     }
+ * } catch (Exception e) {
+ *     e.printStackTrace();
+ * }
  * }
  * </pre>
  * </p>
  * 
- * <p>Methods:
+ * <p>
+ * Methods:
  * <ul>
- * <li>{@link #RuntimeCoordinator()}: Constructs a new {@code RuntimeCoordinator}.</li>
+ * <li>{@link #RuntimeCoordinator()}: Constructs a new
+ * {@code RuntimeCoordinator}.</li>
  * <li>{@link #boot()}: Boots the robot by executing setup phases.</li>
- * <li>{@link #shouldRun()}: Checks if the robot should continue running or if a cancellation is requested.</li>
+ * <li>{@link #shouldRun()}: Checks if the robot should continue running or if a
+ * cancellation is requested.</li>
  * </ul>
  * </p>
  * 
- * <p>Private Methods:
+ * <p>
+ * Private Methods:
  * <ul>
  * <li>{@link #setupPhase1()}: Executes the first setup phase.</li>
  * <li>{@link #setupPhase2()}: Executes the second setup phase.</li>
  * <li>{@link #setupPhase3()}: Executes the third setup phase.</li>
- * <li>{@link #displayCancelationMessage()}: Displays a cancellation message to the user.</li>
- * <li>{@link #isCancelationRequested()}: Checks if a cancellation has been requested by the user.</li>
+ * <li>{@link #displayCancelationMessage()}: Displays a cancellation message to
+ * the user.</li>
+ * <li>{@link #isCancelationRequested()}: Checks if a cancellation has been
+ * requested by the user.</li>
  * </ul>
  * </p>
  * 
@@ -48,15 +59,31 @@ import lejos.nxt.LCD;
  * @see LCD
  * 
  * @author leonweimann
- * @version 1.6
+ * @version 1.7
  */
 public class RuntimeCoordinator {
-    /** Indicates whether the robot has successfully booted */
-    private boolean hasBooted;
+    private static RuntimeCoordinator instance;
+
+    private TaskCoordinator taskCoordinator;
+
+    public MotorController motorController;
+    public TouchController touchController;
+    public LightFluctuationController lightController;
+
+    public static synchronized RuntimeCoordinator getInstance() {
+        if (instance == null) {
+            instance = new RuntimeCoordinator();
+        }
+        return instance;
+    }
 
     /** Constructs a new {@code RuntimeCoordinator} */
-    public RuntimeCoordinator() {
-        hasBooted = false;
+    private RuntimeCoordinator() {
+        taskCoordinator = new TaskCoordinator();
+
+        motorController = new MotorController(Ports.MOTOR_LEFT, Ports.MOTOR_RIGHT);
+        touchController = new TouchController(Ports.TOUCH_SENSOR);
+        lightController = new LightFluctuationController(Ports.LIGHT_SENSOR_LEFT, Ports.LIGHT_SENSOR_RIGHT);
     }
 
     /**
@@ -79,7 +106,7 @@ public class RuntimeCoordinator {
 
         System.out.println("Ready for take off");
         System.out.println("Press any button to start");
-        hasBooted = true;
+        taskCoordinator.finishBooting();
         Button.waitForAnyPress(); // Wait for the user to press any button to start
         System.out.println("> Started");
     }
@@ -88,11 +115,10 @@ public class RuntimeCoordinator {
         System.out.println("Executing setup phase 1...");
         // Add setup phase 1 logic here
 
-        // Temporarily check for an issue
-        String check = "no";
-        if ("Sensors are calibrated".equals(check)) {
-            throw new Exception("Sensors are not calibrated");
-        }
+        System.out.println("Calibrating light sensors...");
+        System.out.println("Place over black line and press Enter, then place over white surface and press Enter");
+        lightController.calibrateSensors();
+        System.out.println("Light sensors calibrated");
     }
 
     private void setupPhase2() {
@@ -105,16 +131,22 @@ public class RuntimeCoordinator {
         // Add setup phase 3 logic here
     }
 
+    public void execute() {
+        while (shouldRun()) {
+            taskCoordinator.refresh();
+        }
+    }
+
     /**
      * Determines whether the runtime coordinator should continue running.
      * 
      * This method displays a cancellation message and checks if a cancellation
      * request has been made.
      * 
-     * @return {@code true} if the coordinator should continue running; 
+     * @return {@code true} if the coordinator should continue running;
      *         {@code false} if a cancellation request has been made.
      */
-    public boolean shouldRun() {
+    private boolean shouldRun() {
         displayCancelationMessage();
         return !isCancelationRequested();
     }
@@ -132,12 +164,16 @@ public class RuntimeCoordinator {
     /**
      * Checks if a cancellation has been requested by the user.
      * 
-     * This method reads the button states to determine if any button has been pressed.
-     * If a button press is detected, it prints a message indicating that the program
-     * has been stopped by the user and returns true. Otherwise, it returns the value
+     * This method reads the button states to determine if any button has been
+     * pressed.
+     * If a button press is detected, it prints a message indicating that the
+     * program
+     * has been stopped by the user and returns true. Otherwise, it returns the
+     * value
      * of the `hasBooted` variable.
      * 
-     * @return true if a cancellation has been requested by the user or if the system
+     * @return true if a cancellation has been requested by the user or if the
+     *         system
      *         has booted; false otherwise.
      */
     private boolean isCancelationRequested() {
@@ -146,6 +182,20 @@ public class RuntimeCoordinator {
             return true;
         }
 
-        return hasBooted;
+        boolean isBooting = taskCoordinator.getPhase() != Phase.BOOTING;
+        return !isBooting;
+    }
+
+    /**
+     * Pauses the execution of the program until the Enter button on the brick is
+     * pressed.
+     * This can be used, for example, during sensor calibration.
+     */
+    public void waitForEnterPress() {
+        System.out.println("Press Enter to continue...");
+        while (Button.ENTER.isUp()) {
+            // Wait until the Enter button is pressed
+        }
+        System.out.println("Continuing execution...");
     }
 }

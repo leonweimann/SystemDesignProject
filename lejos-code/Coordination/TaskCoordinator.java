@@ -30,9 +30,6 @@ import Tasks.*;
  * @author leonweimann
  */
 public class TaskCoordinator {
-    /** Singleton instance of the TaskCoordinator */
-    private static TaskCoordinator instance;
-
     /** The current phase of the system */
     private Phase currentPhase;
 
@@ -40,21 +37,8 @@ public class TaskCoordinator {
      * Private constructor to prevent external insantiation of TaskCotordinator.
      * Initializes the current phase to Phase.BOOTING.
      */
-    private TaskCoordinator() {
+    public TaskCoordinator() {
         currentPhase = Phase.BOOTING;
-    }
-
-    /**
-     * Returns the singleton instance of TaskCoordinator.
-     * If the instance does not exist, it is created.
-     * 
-     * @return The singleton instance of TaskCoordinator.
-     */
-    public static synchronized TaskCoordinator getInstance() {
-        if (instance == null) {
-            instance = new TaskCoordinator();
-        }
-        return instance;
     }
 
     /**
@@ -71,9 +55,13 @@ public class TaskCoordinator {
      * This method first updates the phase of the task coordinator and then
      * retrieves and runs the current task.
      */
-    public static void execute() {
-        getInstance().updatePhase();
-        getInstance().getCurrentTask().run();
+    public void refresh() {
+        updatePhase();
+        getCurrentTask().run();
+    }
+
+    public void finishBooting() {
+        // currentPhase = Phase. TODO: Set to first phase after booting ...
     }
 
     /**

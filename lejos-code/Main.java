@@ -1,5 +1,4 @@
 import Coordination.RuntimeCoordinator;
-import Coordination.TaskCoordinator;
 
 /**
  * The Main class is responsible for initializing and running the robot program.
@@ -13,7 +12,7 @@ public class Main {
     /**
      * The runtime coordinator responsible for managing the runtime environment.
      */
-    private static RuntimeCoordinator runtime = new RuntimeCoordinator(); // TODOD: Maybe Singleton better, since internal phase is needed anywhere ...
+    private static RuntimeCoordinator runtime = RuntimeCoordinator.getInstance();
 
     /**
      * The main entry point for the application.
@@ -33,9 +32,7 @@ public class Main {
         try {
             runtime.boot();
 
-            while (runtime.shouldRun()) {
-                TaskCoordinator.execute();
-            }
+            runtime.execute();
         } catch (Exception e) {
             // TODO: Add handler to RuntimeCoordinator -> Thrown Exceptions from excecution
             // must be handled as well there, so may rething integration of runtime
