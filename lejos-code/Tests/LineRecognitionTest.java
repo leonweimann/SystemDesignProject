@@ -1,9 +1,8 @@
 package Tests;
 
-import Config.*;
-import Controlling.LightFluctuationController;
+import Coordination.RuntimeCoordinator;
 
-import javafx.util.Pair;
+import Controlling.LightFluctuationController;
 
 /**
  * LineRecognitionTest is a test class that extends the Test class.
@@ -14,13 +13,8 @@ import javafx.util.Pair;
  * @version 1.0
  */
 public class LineRecognitionTest extends Test {
-    public static void main(String[] args) {
-        LineRecognitionTest test = new LineRecognitionTest();
-        test.boot();
-    }
+    LightFluctuationController controller = RuntimeCoordinator.getInstance().lightController;
 
-    LightFluctuationController controller = new LightFluctuationController(Ports.LIGHT_SENSOR_LEFT, Ports.LIGHT_SENSOR_RIGHT);
-    
     @Override
     protected void setup() {
         controller.calibrateSensors();

@@ -8,7 +8,7 @@ import lejos.nxt.Button;
  * for user input to start the test and to either repeat the test or exit.
  * 
  * @author leonweimann
- * @version 1.1
+ * @version 1.2
  */
 public abstract class Test {
     /**
@@ -20,10 +20,9 @@ public abstract class Test {
     public void boot() {
         showGreeting();
         setup();
-        while (true) {
-            if (!executionLoop()) {
+        while (executionLoop()) {
+            if (checkExitCondition())
                 break;
-            }
         }
     }
 
@@ -32,8 +31,6 @@ public abstract class Test {
      * It prints the class name and prompts the user to press any button to start.
      */
     private void showGreeting() {
-        String className = this.getClass().getSimpleName();
-        System.out.println("Starting " + className + "...");
         System.out.println("Press any button to start the test.");
         Button.waitForAnyPress();
     }
@@ -56,17 +53,38 @@ public abstract class Test {
     protected abstract boolean executionLoop();
 
     /**
-     * Waits for the user to press any button to continue testing or the ESCAPE
-     * button to exit.
-     * If the ESCAPE button is pressed, the program will print "Test finished." and
-     * terminate.
+     * Checks if the exit condition is met and waits for 5 seconds to confirm the
+     * exit.
+     * 
+     * This method prints a message instructing the user to hold the left and right
+     * buttons for 5 seconds to exit. It then waits for 5 seconds while continuously
+     * checking the exit condition. If the exit condition is still met after 5
+     * seconds, it prints an exit message and returns true, indicating that the exit
+     * condition has been confirmed.
+     * 
+     * @return true if the exit condition is confirmed after 5 seconds, false
+     *         otherwise.
      */
-    protected void waitForNextTestOrExit() {
-        System.out.println("Press any button to test again or ESCAPE to exit.");
-        int button = Button.waitForAnyPress();
-        if (button == Button.ID_ESCAPE) {
-            System.out.println("Test finished.");
-            System.exit(0);
+    private boolean checkExitCondition() {
+        if (exitCondition()) {
+            System.out.println("Hold left and right button \nfor 5 seconds to exit ...");
+            long startTime = System.currentTimeMillis();
+            while (exitCondition()) {
+                if (System.currentTimeMillis() - startTime > 5000) {
+                    System.out.println("Exiting test ...");
+                    return true;
+                }
+            }
         }
+        return false;
+    }
+
+    /**
+     * Checks if both the LEFT and RIGHT buttons are pressed down.
+     *
+     * @return true if both LEFT and RIGHT buttons are pressed, false otherwise.
+     */
+    private boolean exitCondition() {
+        return Button.LEFT.isDown() && Button.RIGHT.isDown();
     }
 }
