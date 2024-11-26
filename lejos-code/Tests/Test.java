@@ -1,6 +1,7 @@
 package Tests;
 
 import lejos.nxt.Button;
+import lejos.nxt.LCD;
 
 /**
  * The {@code Test} class provides a framework for running tests with a boot
@@ -8,9 +9,14 @@ import lejos.nxt.Button;
  * for user input to start the test and to either repeat the test or exit.
  * 
  * @author leonweimann
- * @version 1.2
+ * @version 1.3
  */
 public abstract class Test {
+    /**
+     * The current count of tests that have been executed.
+     */
+    private int currentTestCount = 0;
+
     /**
      * Initializes the system by displaying a greeting and performing setup
      * operations.
@@ -86,5 +92,30 @@ public abstract class Test {
      */
     private boolean exitCondition() {
         return Button.LEFT.isDown() && Button.RIGHT.isDown();
+    }
+
+    /**
+     * Adjusts the current test count based on button presses.
+     * If the LEFT button is pressed, the current test count is decremented.
+     * If the RIGHT button is pressed, the current test count is incremented.
+     * The updated test count is then displayed.
+     */
+    public void attachMultiTesting() {
+        if (Button.LEFT.isDown()) {
+            currentTestCount--;
+            displayCurrentTestCount();
+        } else if (Button.RIGHT.isDown()) {
+            currentTestCount++;
+            displayCurrentTestCount();
+        }
+    }
+
+    /**
+     * Displays the current test count on the LCD screen.
+     * Clears the LCD screen before displaying the test count.
+     */
+    private void displayCurrentTestCount() {
+        LCD.clear();
+        LCD.drawString("Test count: " + currentTestCount, 0, 0);
     }
 }
