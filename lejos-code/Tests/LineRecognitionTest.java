@@ -13,7 +13,7 @@ import Controlling.LightFluctuationController;
  * @version 1.1
  */
 public class LineRecognitionTest extends Test {
-    LightFluctuationController controller = RuntimeCoordinator.getInstance().lightController;
+    private LightFluctuationController controller = RuntimeCoordinator.getInstance().lightController;
 
     @Override
     protected void setup() {
