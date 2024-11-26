@@ -3,12 +3,15 @@ package Tests;
 import Coordination.RuntimeCoordinator;
 import Controlling.MotorController;
 
+<<<<<<< HEAD
 /**
  * Test class to verify the driving capabilities of the motor controller.
  * 
  * @author leonweimann
  * @version 1.1
  */
+=======
+>>>>>>> origin/lw/fixing
 public class DrivingCapabilityTest extends Test {
     private MotorController controller = RuntimeCoordinator.getInstance().motorController;
     private byte currentTest = 0;
