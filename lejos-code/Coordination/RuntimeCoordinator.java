@@ -15,7 +15,7 @@ import lejos.nxt.LCD;
  * @author leonweimann
  * @version 1.8
  */
-public class RuntimeCoordinator {
+public final class RuntimeCoordinator {
     /**
      * Singleton instance of the RuntimeCoordinator class.
      * This static variable holds the single instance of the RuntimeCoordinator
@@ -51,7 +51,7 @@ public class RuntimeCoordinator {
      *
      * @return the singleton instance of RuntimeCoordinator
      */
-    public static synchronized RuntimeCoordinator getInstance() {
+    public static RuntimeCoordinator getInstance() {
         if (instance == null) {
             instance = new RuntimeCoordinator();
         }
@@ -78,7 +78,7 @@ public class RuntimeCoordinator {
      * 
      * @throws Exception if an error occurs during the booting process
      */
-    public void boot() throws Exception {
+    public void boot() {
         System.out.println("Starting robot...");
 
         // Setup phase 1
@@ -102,7 +102,7 @@ public class RuntimeCoordinator {
         // Add setup phase 1 logic here
 
         System.out.println("Calibrating light sensors...");
-        System.out.println("Place over black line and press Enter, then place over white surface and press Enter");
+        System.out.println("Place over black line and \npress Enter, then place over \nwhite surface and press Enter");
         lightController.calibrateSensors();
         System.out.println("Light sensors calibrated");
     }
@@ -168,18 +168,5 @@ public class RuntimeCoordinator {
 
         boolean isBooting = taskCoordinator.getPhase() != Phase.BOOTING;
         return !isBooting;
-    }
-
-    /**
-     * Pauses the execution of the program until the Enter button on the brick is
-     * pressed.
-     * This can be used, for example, during sensor calibration.
-     */
-    public void waitForEnterPress() {
-        System.out.println("Press Enter to continue...");
-        while (Button.ENTER.isUp()) {
-            // Wait until the Enter button is pressed
-        }
-        System.out.println("Continuing execution...");
     }
 }

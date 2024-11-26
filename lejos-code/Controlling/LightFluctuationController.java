@@ -1,10 +1,10 @@
 package Controlling;
 
-import Coordination.RuntimeCoordinator;
+import Coordination.UserInputHandler;
 
+import lejos.nxt.Button;
 import lejos.nxt.LightSensor;
 import lejos.nxt.SensorPort;
-import javafx.util.Pair;
 
 /**
  * The LightFluctuationController class is responsible for coordinating and
@@ -40,7 +40,8 @@ public class LightFluctuationController {
     private static final int DIFFERENCE_THRESHOLD = 10; // Threshold for differential comparison
 
     private boolean[] symbolBuffer = new boolean[SYMBOL_BUFFER_SIZE];
-    private int symbolIndex = 0; // TODO: Currently never resetted, instead worked with modulo. Could lead to overflow...
+    private int symbolIndex = 0; // TODO: Currently never resetted, instead worked with modulo. Could lead to
+                                 // overflow...
     private static final int SYMBOL_BUFFER_SIZE = 8;
 
     /**
@@ -49,24 +50,20 @@ public class LightFluctuationController {
      * measurements.
      */
     public void calibrateSensors() {
-        RuntimeCoordinator runtime = RuntimeCoordinator.getInstance();
+        System.out.println("Place both sensors over white surface ...");
+        UserInputHandler.awaitButtonPress(Button.ENTER);
 
-        runtime.waitForEnterPress();
-
-        // Assume robot is placed over white surface
         leftSensor.calibrateHigh();
         rightSensor.calibrateHigh();
-
         int whiteLeft = leftSensor.getLightValue();
         int whiteRight = rightSensor.getLightValue();
 
         // Place robot over black line
-        // ... wait for user input ...
-        runtime.waitForEnterPress();
+        System.out.println("Place both sensors over black surface ...");
+        UserInputHandler.awaitButtonPress(Button.ENTER);
 
         leftSensor.calibrateLow();
         rightSensor.calibrateLow();
-
         int blackLeft = leftSensor.getLightValue();
         int blackRight = rightSensor.getLightValue();
 
@@ -76,17 +73,16 @@ public class LightFluctuationController {
     }
 
     /**
-     * Determines if the left and right light sensors are currently measuring black
-     * color using an optimized method with dynamic thresholding and differential
-     * comparison.
+     * Determines whether the left and right sensors detect a black surface.
+     * The method uses Exponential Moving Average (EMA) to update the thresholds
+     * for black detection and performs a differential comparison to enhance
+     * accuracy.
      *
-     * @param threshold The threshold value to determine significant fluctuation.
-     * @return a Pair of two Booleans, where the first Boolean indicates whether the
-     *         left light sensor is currently measuring black color, and the second
-     *         Boolean indicates whether the right light sensor is currently
-     *         measuring black color.
+     * @return A boolean array where the first element indicates if the left sensor
+     *         detects black and the second element indicates if the right sensor
+     *         detects black.
      */
-    public Pair<Boolean, Boolean> getIsBlack(int threshold) {
+    public boolean[] getIsBlack() {
         int leftReading = leftSensor.getLightValue();
         int rightReading = rightSensor.getLightValue();
 
@@ -105,14 +101,16 @@ public class LightFluctuationController {
             isRightBlack = difference > 0;
         }
 
-        return new Pair<>(isLeftBlack, isRightBlack);
+        return new boolean[] { isLeftBlack, isRightBlack };
     }
 
     /**
      * Checks if the last symbol in the buffer matches the given color.
      *
-     * @param isBlack a boolean indicating the color to check (true for black, false for white).
-     * @return true if the last symbol in the buffer matches the given color, false otherwise.
+     * @param isBlack a boolean indicating the color to check (true for black, false
+     *                for white).
+     * @return true if the last symbol in the buffer matches the given color, false
+     *         otherwise.
      */
     private boolean isAlreadyLastSymbol(boolean isBlack) {
         int lastIndex = (symbolIndex - 1 + SYMBOL_BUFFER_SIZE) % SYMBOL_BUFFER_SIZE;
@@ -139,7 +137,8 @@ public class LightFluctuationController {
      * value (false).
      *
      * This method assumes that the symbol buffer is an array of boolean values
-     * and that SYMBOL_BUFFER_SIZE is a constant representing the size of the buffer.
+     * and that SYMBOL_BUFFER_SIZE is a constant representing the size of the
+     * buffer.
      */
     public void removeFirstSymbol() {
         for (int i = 0; i < SYMBOL_BUFFER_SIZE - 1; i++) {
@@ -150,7 +149,7 @@ public class LightFluctuationController {
 
     /**
      * Resets the symbol buffer by setting all its elements to their default value.
-     * This method iterates through the symbol buffer and assigns a default value 
+     * This method iterates through the symbol buffer and assigns a default value
      * (in this case, false) to each element.
      */
     public void resetSymbolBuffer() {

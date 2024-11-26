@@ -28,8 +28,8 @@ public class LineRecognitionTest extends Test {
 
     @Override
     protected boolean executionLoop() {
-        Pair<Boolean, Boolean> isBlack = controller.getIsBlack(Constants.DEFAULT_THRESHOLD);
-        System.out.println("Left: " + isBlack.getKey() + ", Right: " + isBlack.getValue());
+        boolean[] isBlack = controller.getIsBlack();
+        System.out.println("Left: " + isBlack[0] + ", Right: " + isBlack[1]);
         return true; // Continue execution, exit only via ESCAPE button
     }
 }

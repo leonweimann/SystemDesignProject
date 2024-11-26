@@ -6,7 +6,7 @@ import Coordination.RuntimeCoordinator;
  * until a user presses a button to stop the program.
  * 
  * @author leonweimann
- * @version 1.8
+ * @version 1.9
  */
 public class Main {
     /**
@@ -22,14 +22,7 @@ public class Main {
      * @param args The command line arguments.
      */
     public static void main(String[] args) {
-        try {
-            runtime.boot();
-            runtime.execute();
-        } catch (Exception e) {
-            // TODO: Add handler to RuntimeCoordinator -> Thrown Exceptions from excecution
-            // must be handled as well there, so may rething integration of runtime
-            // internally.
-            System.out.println(e.getMessage());
-        }
+        runtime.boot();
+        runtime.execute();
     }
 }
