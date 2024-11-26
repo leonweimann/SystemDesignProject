@@ -18,6 +18,10 @@ public class MotorController {
     private DrivingMotor leftMotor;
     private DrivingMotor rightMotor;
 
+    /**
+     * The default speed for the motor controller.
+     * This value is used when no other speed is specified.
+     */
     private static final int DEFAULT_SPEED = 500;
 
     /**

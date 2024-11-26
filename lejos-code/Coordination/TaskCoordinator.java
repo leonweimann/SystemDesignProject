@@ -2,13 +2,17 @@ package Coordination;
 
 import Tasks.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
- * The TaskCoordinator class is responsible for managing the phases and tasks of the system.
- * It initializes the system in the BOOTING phase and provides methods to update the phase,
- * retrieve the current task, and execute the current task.
+ * The TaskCoordinator class is responsible for managing the phases and tasks of
+ * the system. It initializes the system in the BOOTING phase and provides
+ * methods to update the phase, retrieve the current task, and execute the
+ * current task.
  * 
  * @author leonweimann
- * @version 1.4
+ * @version 1.5
  */
 public class TaskCoordinator {
     /**
@@ -17,10 +21,16 @@ public class TaskCoordinator {
     private Phase currentPhase;
 
     /**
+     * A list of tasks that have been completed.
+     */
+    private List<ProjectTask> completedTasks;
+
+    /**
      * Creates a new TaskCoordinator instance with the current phase set to BOOTING.
      */
     public TaskCoordinator() {
         currentPhase = Phase.BOOTING;
+        completedTasks = new ArrayList<>();
     }
 
     /**
