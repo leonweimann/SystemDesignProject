@@ -10,7 +10,7 @@ import Controlling.LightFluctuationController;
  * in recognizing lines using light sensors.
  * 
  * @author leonweimann
- * @version 1.0
+ * @version 1.1
  */
 public class LineRecognitionTest extends Test {
     LightFluctuationController controller = RuntimeCoordinator.getInstance().lightController;
@@ -23,7 +23,7 @@ public class LineRecognitionTest extends Test {
     @Override
     protected boolean executionLoop() {
         boolean[] isBlack = controller.getIsBlack();
-        System.out.println("Left: " + isBlack[0] + ", Right: " + isBlack[1]);
-        return true; // Continue execution, exit only via ESCAPE button
+        System.out.println("R: " + isBlack[1] + ", R: " + isBlack[1]);
+        return true; // Continue execution
     }
 }
