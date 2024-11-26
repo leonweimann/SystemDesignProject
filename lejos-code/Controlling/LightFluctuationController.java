@@ -41,27 +41,6 @@ public class LightFluctuationController {
 
     /**
      * Determines if the left and right light sensors are currently measuring black
-     * color.
-     *
-     * @return a Pair of two Booleans, where the first Boolean indicates whether the
-     *         left light sensor is currently measuring black color, and the second
-     *         Boolean indicates whether the right light sensor is currently
-     *         measuring black color.
-     */
-    public Pair<Boolean, Boolean> getIsBlack() {
-        int leftValue = leftSensor.getLightValue();
-        int rightValue = rightSensor.getLightValue();
-
-        int averageValue = (leftValue + rightValue) / 2;
-
-        boolean isLeftBlack = leftValue < averageValue;
-        boolean isRightBlack = rightValue < averageValue;
-
-        return new Pair<>(isLeftBlack, isRightBlack);
-    }
-
-    /**
-     * Determines if the left and right light sensors are currently measuring black
      * color using an optimized method with dynamic thresholding and differential
      * comparison.
      *
@@ -71,7 +50,7 @@ public class LightFluctuationController {
      *         Boolean indicates whether the right light sensor is currently
      *         measuring black color.
      */
-    public Pair<Boolean, Boolean> getIsBlackOptimized(int threshold) {
+    public Pair<Boolean, Boolean> getIsBlack(int threshold) {
         int leftReading = leftSensor.getLightValue();
         int rightReading = rightSensor.getLightValue();
 
