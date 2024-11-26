@@ -12,7 +12,8 @@ package Controlling;
  * The PIDController can be used to precisely control robot movements, such as line following or speed control.
  * 
  * @author leonweimann
- * @version 1.0
+ * @author marianmeißner
+ * @version 1.1
  */
 public class PIDController {
 
@@ -44,12 +45,13 @@ public class PIDController {
     /**
      * Calculates the control value based on the setpoint and the current actual value.
      * 
-     * @param setpoint The desired setpoint.
+     * @param setpoint The desired setpoint (target value).
      * @param actualValue The current actual value.
      * @return The calculated control value to minimize the error.
      */
     public double calculate(double setpoint, double actualValue) {
-        double error = setpoint - actualValue;
+        // Convert the int values to double for precision
+        double error = (double) setpoint - actualValue;
         integral += error;
         double derivative = error - previousError;
 
