@@ -31,7 +31,6 @@ public class Main {
     public static void main(String[] args) {
         try {
             runtime.boot();
-
             runtime.execute();
         } catch (Exception e) {
             // TODO: Add handler to RuntimeCoordinator -> Thrown Exceptions from excecution

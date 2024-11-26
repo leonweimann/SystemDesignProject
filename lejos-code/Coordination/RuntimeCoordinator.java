@@ -12,64 +12,45 @@ import lejos.nxt.LCD;
  * necessary setup phases before starting and provides mechanisms to handle
  * user cancellation requests.
  * 
- * <p>
- * Usage example:
- * 
- * <pre>
- * {@code
- * RuntimeCoordinator coordinator = new RuntimeCoordinator();
- * try {
- *     coordinator.boot();
- *     while (coordinator.shouldRun()) {
- *         // Start robot operations
- *     }
- * } catch (Exception e) {
- *     e.printStackTrace();
- * }
- * }
- * </pre>
- * </p>
- * 
- * <p>
- * Methods:
- * <ul>
- * <li>{@link #RuntimeCoordinator()}: Constructs a new
- * {@code RuntimeCoordinator}.</li>
- * <li>{@link #boot()}: Boots the robot by executing setup phases.</li>
- * <li>{@link #shouldRun()}: Checks if the robot should continue running or if a
- * cancellation is requested.</li>
- * </ul>
- * </p>
- * 
- * <p>
- * Private Methods:
- * <ul>
- * <li>{@link #setupPhase1()}: Executes the first setup phase.</li>
- * <li>{@link #setupPhase2()}: Executes the second setup phase.</li>
- * <li>{@link #setupPhase3()}: Executes the third setup phase.</li>
- * <li>{@link #displayCancelationMessage()}: Displays a cancellation message to
- * the user.</li>
- * <li>{@link #isCancelationRequested()}: Checks if a cancellation has been
- * requested by the user.</li>
- * </ul>
- * </p>
- * 
- * @see Exception
- * @see Button
- * @see LCD
- * 
  * @author leonweimann
- * @version 1.7
+ * @version 1.8
  */
 public class RuntimeCoordinator {
+    /**
+     * Singleton instance of the RuntimeCoordinator class.
+     * This static variable holds the single instance of the RuntimeCoordinator
+     * to ensure that only one instance of the class is created and used
+     * throughout the application.
+     */
     private static RuntimeCoordinator instance;
 
+    /**
+     * The TaskCoordinator instance responsible for managing and coordinating tasks.
+     */
     private TaskCoordinator taskCoordinator;
 
+    /**
+     * The MotorController instance used to control the motors.
+     */
     public MotorController motorController;
+
+    /**
+     * An instance of TouchController that handles touch sensor interactions.
+     */
     public TouchController touchController;
+
+    /**
+     * The controller responsible for managing light fluctuations.
+     */
     public LightFluctuationController lightController;
 
+    /**
+     * Returns the singleton instance of the RuntimeCoordinator.
+     * This method is synchronized to ensure thread safety.
+     * If the instance is null, it initializes a new RuntimeCoordinator.
+     *
+     * @return the singleton instance of RuntimeCoordinator
+     */
     public static synchronized RuntimeCoordinator getInstance() {
         if (instance == null) {
             instance = new RuntimeCoordinator();
@@ -77,7 +58,11 @@ public class RuntimeCoordinator {
         return instance;
     }
 
-    /** Constructs a new {@code RuntimeCoordinator} */
+    /**
+     * Constructs a new RuntimeCoordinator instance.
+     * Initializes the TaskCoordinator, MotorController, TouchController, and
+     * LightFluctuationController instances.
+     */
     private RuntimeCoordinator() {
         taskCoordinator = new TaskCoordinator();
 
@@ -87,10 +72,11 @@ public class RuntimeCoordinator {
     }
 
     /**
-     * Boots the robot by executing setup phases. If an issue occurs during the
-     * booting, a {@link Exception} is thrown.
-     *
-     * @throws Exception if there is an issue during the booting process.
+     * Boots the robot by executing the setup phases and starting the runtime
+     * coordination process.
+     * The robot will wait for the user to press any button before starting.
+     * 
+     * @throws Exception if an error occurs during the booting process
      */
     public void boot() throws Exception {
         System.out.println("Starting robot...");
@@ -111,7 +97,7 @@ public class RuntimeCoordinator {
         System.out.println("> Started");
     }
 
-    private void setupPhase1() throws Exception {
+    private void setupPhase1() {
         System.out.println("Executing setup phase 1...");
         // Add setup phase 1 logic here
 
@@ -131,6 +117,11 @@ public class RuntimeCoordinator {
         // Add setup phase 3 logic here
     }
 
+    /**
+     * Executes the runtime coordination process.
+     * Continuously refreshes the task coordinator as long as the condition to run
+     * is met.
+     */
     public void execute() {
         while (shouldRun()) {
             taskCoordinator.refresh();
@@ -138,13 +129,13 @@ public class RuntimeCoordinator {
     }
 
     /**
-     * Determines whether the runtime coordinator should continue running.
+     * Checks if the robot should continue running.
+     * The robot should continue running if no cancellation request has been made.
+     * A cancellation request is made if any button is pressed or if the robot is
+     * not in the booting phase.
      * 
-     * This method displays a cancellation message and checks if a cancellation
-     * request has been made.
-     * 
-     * @return {@code true} if the coordinator should continue running;
-     *         {@code false} if a cancellation request has been made.
+     * @return {@code true} if the robot should continue running;
+     *         {@code false} otherwise.
      */
     private boolean shouldRun() {
         displayCancelationMessage();
@@ -162,19 +153,12 @@ public class RuntimeCoordinator {
     }
 
     /**
-     * Checks if a cancellation has been requested by the user.
+     * Checks if a cancellation request has been made.
+     * A cancellation request is made if any button is pressed or if the robot is
+     * not in the booting phase.
      * 
-     * This method reads the button states to determine if any button has been
-     * pressed.
-     * If a button press is detected, it prints a message indicating that the
-     * program
-     * has been stopped by the user and returns true. Otherwise, it returns the
-     * value
-     * of the `hasBooted` variable.
-     * 
-     * @return true if a cancellation has been requested by the user or if the
-     *         system
-     *         has booted; false otherwise.
+     * @return {@code true} if a cancellation request has been made;
+     *         {@code false} otherwise.
      */
     private boolean isCancelationRequested() {
         if (Button.readButtons() != 0) {
