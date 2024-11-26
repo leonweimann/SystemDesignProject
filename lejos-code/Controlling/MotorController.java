@@ -1,39 +1,42 @@
 package Controlling;
 
 import Coordination.RuntimeCoordinator;
+
 import Utils.DynamicMotor;
 import lejos.nxt.MotorPort;
 
 /**
- * The MotorController class is responsible for controlling the left and right
- * motors of the robot.
- * It provides an interface to adjust motor speeds, enabling the robot to move
- * and steer.
- * The main functionality centers around moving the robot with a specified angle
- * and speed.
+ * MotorController class manages the left and right motors of the robot.
+ * It provides methods to control motor speeds, enabling movement and steering.
+ * The class supports setting base speed, moving with a specified angle, and rotating.
+ * It also includes methods for gradual and immediate stops.
  * 
  * @author leonweimann
- * @version 2.0
+ * @version 2.1
  */
 public class MotorController {
     private DynamicMotor leftMotor;
     private DynamicMotor rightMotor;
-
     private TouchController touchController;
-
     private boolean motorsRunning = false;
     private boolean rotationInProgress = false;
     private int baseSpeed = 200; // Default base speed for the robot
 
-    private static final double DISTANCE_PER_ROTATION = 9.42478; // cm per full wheel rotation
-    private static final double ROBOT_TRACK_WIDTH = 13.0; // Distance between the wheels in cm
+    /**
+     * The distance each wheel travels per full rotation in centimeters.
+     */
+    private static final double DISTANCE_PER_ROTATION = 9.42478;
 
     /**
-     * Constructs a new MotorController instance with the specified motor ports for
-     * the left and right motors.
+     * The distance between the wheels of the robot in centimeters.
+     */
+    private static final double ROBOT_TRACK_WIDTH = 13.0;
+
+    /**
+     * Constructs a MotorController with specified motor ports for left and right motors.
      * 
-     * @param leftPort  The motor port to which the left motor is connected.
-     * @param rightPort The motor port to which the right motor is connected.
+     * @param leftPort  The motor port for the left motor.
+     * @param rightPort The motor port for the right motor.
      */
     public MotorController(MotorPort leftPort, MotorPort rightPort) {
         this.leftMotor = new DynamicMotor(leftPort);
@@ -44,15 +47,14 @@ public class MotorController {
     /**
      * Sets the base speed for the robot's movement.
      * 
-     * @param speed The base speed to be used for movement (in degrees per second).
+     * @param speed The base speed in degrees per second.
      */
     public void setBaseSpeed(int speed) {
         this.baseSpeed = speed;
     }
 
     /**
-     * Resets the base speed to the default value.
-     * Also resets the current speed to ensure smooth acceleration from default.
+     * Resets the base speed to the default value and ensures smooth acceleration.
      */
     public void resetSpeed() {
         this.baseSpeed = 200;
@@ -61,15 +63,10 @@ public class MotorController {
     }
 
     /**
-     * Moves the robot by adjusting motor speeds based on the specified angle and
-     * base speed.
-     * A positive angle means turning right, and a negative angle means turning
-     * left.
-     * The method adjusts the motor speeds proportionally to make smoother turns.
+     * Moves the robot by adjusting motor speeds based on the specified angle.
+     * Positive angle turns right, negative angle turns left.
      * 
-     * @param angle The angle to steer the robot, where -100 represents a full left
-     *              turn and 100 represents a full right turn.
-     *              Values in between adjust the steering proportionally.
+     * @param angle The angle to steer the robot, from -100 (full left) to 100 (full right).
      */
     public void moveWithAngle(int angle) {
         if (rotationInProgress) {
@@ -104,8 +101,7 @@ public class MotorController {
     }
 
     /**
-     * Stops both motors gradually.
-     * The motors decelerate dynamically until they stop.
+     * Stops both motors gradually by decelerating dynamically until they stop.
      */
     public void stopGradually() {
         leftMotor.adjustSpeedDynamically(0);
@@ -118,7 +114,7 @@ public class MotorController {
     }
 
     /**
-     * Stops both motors immediately, like an emergency brake.
+     * Stops both motors immediately, acting as an emergency brake.
      */
     public void hardStop() {
         leftMotor.hardStop();
@@ -129,15 +125,10 @@ public class MotorController {
 
     /**
      * Rotates the robot by a specified angle.
-     * A positive angle rotates to the right, and a negative angle rotates to the
-     * left.
-     * The method ensures no other motor actions are executed during the rotation.
-     * The input angle is normalized to be within -360 to 360 degrees.
+     * Positive angle rotates right, negative angle rotates left.
+     * Ensures no other motor actions during rotation.
      * 
-     * @param angle The angle to rotate the robot, which will be normalized to be
-     *              within -360 to 360 degrees.
-     *              Negative values indicate a left turn, positive values indicate a
-     *              right turn.
+     * @param angle The angle to rotate the robot, normalized to -360 to 360 degrees.
      */
     public void rotate(int angle) {
         rotationInProgress = true;
