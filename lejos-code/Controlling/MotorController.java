@@ -77,7 +77,7 @@ public class MotorController {
      * Moves the robot by adjusting motor speeds based on the specified angle.
      * Positive angle turns right, negative angle turns left.
      * 
-     * @param angle The angle to steer the robot, from -90 (full left) to 90 (full
+     * @param angle The angle to steer the robot, from -100 (full left) to 100 (full
      *              right).
      */
     public void moveWithAngle(int angle) {
@@ -88,11 +88,11 @@ public class MotorController {
         angle = Math.max(-90, Math.min(90, angle));
 
         if (angle < 0) { // Turn left
-            leftSpeed = (int) (DEFAULT_SPEED * (1.0 + angle / 90.0));
+            leftSpeed = (int) (DEFAULT_SPEED * (1.0 + angle / 100.0));
             rightSpeed = DEFAULT_SPEED;
         } else if (angle > 0) { // Turn right
             leftSpeed = DEFAULT_SPEED;
-            rightSpeed = (int) (DEFAULT_SPEED * (1.0 - angle / 90.0));
+            rightSpeed = (int) (DEFAULT_SPEED * (1.0 - angle / 100.0));
         } else { // Move straight
             leftSpeed = DEFAULT_SPEED;
             rightSpeed = DEFAULT_SPEED;
@@ -135,6 +135,10 @@ public class MotorController {
 
         leftMotor.rotate(degreesToRotate, true);
         rightMotor.rotate(-degreesToRotate, true);
+
+        while (motorsRunning()) {
+            // Wait for motors to finish rotating
+        }
 
         resetSpeeds();
     }
