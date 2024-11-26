@@ -6,7 +6,7 @@ import Coordination.RuntimeCoordinator;
  * until a user presses a button to stop the program.
  * 
  * @author leonweimann
- * @version 1.7
+ * @version 1.8
  */
 public class Main {
     /**
@@ -15,18 +15,11 @@ public class Main {
     private static RuntimeCoordinator runtime = RuntimeCoordinator.getInstance();
 
     /**
-     * The main entry point for the application.
+     * The main method initializes the runtime environment and starts the program.
+     * It catches any exceptions thrown during execution and prints the error
+     * message to the console.
      * 
-     * <p>
-     * This method initializes the runtime environment and enters a loop where it
-     * continuously executes tasks coordinated by the TaskCoordinator until the
-     * runtime
-     * signals to stop. If an exception occurs during execution, it is caught and
-     * its
-     * message is printed to the standard output.
-     * </p>
-     * 
-     * @param args Command-line arguments passed to the application.
+     * @param args The command line arguments.
      */
     public static void main(String[] args) {
         try {
