@@ -1,6 +1,6 @@
 package Tests;
 
-import Config.Ports;
+import Config.*;
 import Controlling.LightFluctuationController;
 
 import javafx.util.Pair;
@@ -28,7 +28,7 @@ public class LineRecognitionTest extends Test {
 
     @Override
     protected boolean executionLoop() {
-        Pair<Boolean, Boolean> isBlack = controller.getIsBlack(20);
+        Pair<Boolean, Boolean> isBlack = controller.getIsBlack(Constants.DEFAULT_THRESHOLD);
         System.out.println("Left: " + isBlack.getKey() + ", Right: " + isBlack.getValue());
         return true; // Continue execution, exit only via ESCAPE button
     }
