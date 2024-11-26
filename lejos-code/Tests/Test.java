@@ -8,39 +8,58 @@ import lejos.nxt.Button;
  * for user input to start the test and to either repeat the test or exit.
  * 
  * @author leonweimann
- * @version 1.0
+ * @version 1.1
  */
 public abstract class Test {
     /**
-     * Boots the system by printing starting logs, waiting for any button press,
-     * and then entering the execution loop.
+     * Initializes the system by displaying a greeting and performing setup
+     * operations.
+     * Continuously executes the main loop until the executionLoop method returns
+     * false.
      */
     public void boot() {
-        printStartingLogs();
-        Button.waitForAnyPress();
-        executionLoop();
+        showGreeting();
+        setup();
+        while (true) {
+            if (!executionLoop()) {
+                break;
+            }
+        }
     }
 
     /**
-     * Prints the starting logs for the test.
-     * This includes the name of the class and a prompt to press any button to start the test.
+     * Displays a greeting message indicating the start of the test.
+     * It prints the class name and prompts the user to press any button to start.
      */
-    private void printStartingLogs() {
+    private void showGreeting() {
         String className = this.getClass().getSimpleName();
         System.out.println("Starting " + className + "...");
         System.out.println("Press any button to start the test.");
+        Button.waitForAnyPress();
     }
 
     /**
-     * This method represents the main execution loop for a specific task.
-     * Subclasses must provide an implementation for this method to define
-     * the behavior of the execution loop.
+     * Sets up the necessary configurations or initializations required before the
+     * main functionality is executed.
+     * This method should be implemented by subclasses to provide specific setup
+     * logic.
      */
-    protected abstract void executionLoop();
+    protected abstract void setup();
 
     /**
-     * Waits for the user to press any button to continue testing or the ESCAPE button to exit.
-     * If the ESCAPE button is pressed, the program will print "Test finished." and terminate.
+     * Executes the main loop of the implementation.
+     * This method should contain the core logic that needs to be repeatedly
+     * executed.
+     * 
+     * @return true if the loop should continue, false if it should terminate.
+     */
+    protected abstract boolean executionLoop();
+
+    /**
+     * Waits for the user to press any button to continue testing or the ESCAPE
+     * button to exit.
+     * If the ESCAPE button is pressed, the program will print "Test finished." and
+     * terminate.
      */
     protected void waitForNextTestOrExit() {
         System.out.println("Press any button to test again or ESCAPE to exit.");
