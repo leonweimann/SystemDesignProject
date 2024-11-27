@@ -11,7 +11,6 @@ import Controlling.MotorController;
  */
 public class DrivingCapabilityTest extends Test {
     private MotorController controller = RuntimeCoordinator.getInstance().motorController;
-    private byte currentTest = 0;
 
     @Override
     protected void setup() {
@@ -21,7 +20,7 @@ public class DrivingCapabilityTest extends Test {
     @Override
     protected boolean executionLoop() {
         attachMultiTesting();
-        switch (currentTest) {
+        switch (currentTestCount) {
             case 0:
                 controller.moveWithAngle(0);
                 return true;

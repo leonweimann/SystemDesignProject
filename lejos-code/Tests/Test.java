@@ -2,6 +2,7 @@ package Tests;
 
 import lejos.nxt.Button;
 import lejos.nxt.LCD;
+import lejos.util.Delay;
 
 /**
  * The {@code Test} class provides a framework for running tests with a boot
@@ -15,7 +16,7 @@ public abstract class Test {
     /**
      * The current count of tests that have been executed.
      */
-    private int currentTestCount = 0;
+    public int currentTestCount = 0;
 
     /**
      * Initializes the system by displaying a greeting and performing setup
@@ -78,6 +79,7 @@ public abstract class Test {
             while (exitCondition()) {
                 if (System.currentTimeMillis() - startTime > 5000) {
                     System.out.println("Exiting test ...");
+                    Delay.msDelay(1000);
                     return true;
                 }
             }
@@ -102,9 +104,13 @@ public abstract class Test {
      */
     public void attachMultiTesting() {
         if (Button.LEFT.isDown()) {
+            while (Button.LEFT.isDown()) {
+            }
             currentTestCount--;
             displayCurrentTestCount();
         } else if (Button.RIGHT.isDown()) {
+            while (Button.RIGHT.isDown()) {
+            }
             currentTestCount++;
             displayCurrentTestCount();
         }
