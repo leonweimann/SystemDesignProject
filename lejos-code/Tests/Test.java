@@ -3,6 +3,7 @@ package Tests;
 import Coordination.UserInputHandler;
 import lejos.nxt.Button;
 import lejos.nxt.LCD;
+import lejos.util.Delay;
 
 /**
  * The {@code Test} class provides a framework for running tests with a boot
@@ -31,6 +32,8 @@ public abstract class Test {
             if (checkExitCondition())
                 break;
         }
+        System.out.println("Test completed.");
+        Delay.msDelay(1000);
     }
 
     /**
