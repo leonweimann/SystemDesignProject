@@ -5,6 +5,9 @@ import lejos.nxt.Button;
 /**
  * The UserInputHandler class provides utility methods for handling user input
  * through button presses. This class cannot be instantiated.
+ * 
+ * @author leonweimann
+ * @version 1.2
  */
 public final class UserInputHandler {
     /**
