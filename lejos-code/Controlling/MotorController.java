@@ -133,6 +133,7 @@ public class MotorController {
         long rotationTime = (long) ((travelDistance / wheelDistancePerRotation) * wheelSpeedPerRotation);
 
         System.out.println("rotationTime: " + rotationTime);
+        Delay.msDelay(1000);
 
         if (angle < 0) {
             leftMotor.backward();

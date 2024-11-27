@@ -35,6 +35,7 @@ public class DrivingCapabilityTest extends Test {
                 return true;
             case 4:
                 controller.rotate(360);
+                return true;
             default:
                 return false;
         }
