@@ -1,6 +1,7 @@
 package Tests;
 
 import Coordination.RuntimeCoordinator;
+import lejos.util.Delay;
 import Controlling.MotorController;
 
 /**
@@ -35,6 +36,8 @@ public class DrivingCapabilityTest extends Test {
                 return true;
             case 4:
                 controller.rotate(360);
+                System.out.println("Test completed.");
+                Delay.msDelay(1000);
             default:
                 return false;
         }

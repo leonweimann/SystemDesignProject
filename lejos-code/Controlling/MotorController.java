@@ -134,10 +134,14 @@ public class MotorController {
         double rotationDistance = (turnCircumference * angle) / 360.0; // Distance each wheel must travel
         int degreesToRotate = (int) ((rotationDistance / DISTANCE_PER_ROTATION) * 360); // Convert distance to degrees
 
+        System.out.println("Rotating");
+
         leftMotor.rotate(degreesToRotate, true);
         rightMotor.rotate(-degreesToRotate, true);
 
         Delay.msDelay(2000);
+
+        System.out.println("Rotate finished");
 
         // while (motorsRunning()) {
         //     // Wait for motors to finish rotating
