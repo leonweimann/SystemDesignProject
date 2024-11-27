@@ -30,7 +30,7 @@ public class MotorController {
      */
     private static final int WHEEL_DIAMETER = 3;
 
-    private static final int ROBOT_WIDHT = 13;
+    private static final int ROBOT_WIDTH = 13;
 
     /**
      * Constructs a MotorController with specified motor ports for left and right
@@ -122,14 +122,17 @@ public class MotorController {
      *              angle is normalized to the range [0, 360).
      */
     public void rotate(int angle) {
-        final int ROTATION_SPEED = 250; // Custom speed for rotation TODO: Adjust
+        final int ROTATION_SPEED = 250; // [Degrees / Second] // Custom speed for rotation TODO: Adjust
         setSpeeds(ROTATION_SPEED);
-        angle = angle % 360;
 
-        double travelDistance = (Math.abs(angle) / 360.0) * ROBOT_WIDHT;
-        double wheelSpeedPerRotation = ROTATION_SPEED / 360;
-        long rotationTime = (long) ((travelDistance / WHEEL_DIAMETER) * wheelSpeedPerRotation);
+        int normalizedAngle = Math.abs(angle) % 360;  // Normalize angle to the range [0, 360)
+        
+        // Calculate the time needed to rotate the robot by the specified angle
+        double travelDistance = (normalizedAngle / 360.0) * ROBOT_WIDTH;
+        double wheelSpeedPerRotation = ROTATION_SPEED / 360.0;
+        int rotationTime = (int) ((travelDistance / WHEEL_DIAMETER) * wheelSpeedPerRotation * 1000); // Cast to int to ignore decimal part
 
+        // Determine the direction of rotation based on the sign of the angle
         if (angle < 0) {
             leftMotor.backward();
             rightMotor.forward();
@@ -138,7 +141,7 @@ public class MotorController {
             rightMotor.backward();
         }
 
-        Delay.msDelay(rotationTime);
-        stop();
+        Delay.msDelay(rotationTime); // Wait so the robot rotates as long as needed to reach the angle
+        stop(); // Stop rotating
     }
 }
