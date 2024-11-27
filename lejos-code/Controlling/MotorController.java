@@ -28,12 +28,7 @@ public class MotorController {
     /**
      * The distance each wheel travels per full rotation in centimeters.
      */
-    private static final double DISTANCE_PER_ROTATION = 9.42478;
-
-    /**
-     * The distance between the wheels of the robot in centimeters.
-     */
-    private static final double ROBOT_TRACK_WIDTH = 13.0;
+    private static final int WHEEL_DIAMETER = 3;
 
     /**
      * Constructs a MotorController with specified motor ports for left and right
@@ -119,34 +114,28 @@ public class MotorController {
 
     /**
      * Rotates the robot by a specified angle.
-     * Positive angle rotates right, negative angle rotates left.
-     * 
-     * @param angle The angle to rotate the robot, normalized to -360 to 360
-     *              degrees.
+     *
+     * @param angle the angle in degrees to rotate the robot. Positive values rotate
+     *              clockwise, and negative values rotate counterclockwise. The
+     *              angle is normalized to the range [0, 360).
      */
     public void rotate(int angle) {
-        setSpeeds(250); // Custom speed for rotation TODO: Adjust
+        final int ROTATION_SPEED = 250; // Custom speed for rotation TODO: Adjust
+        setSpeeds(ROTATION_SPEED);
         angle = angle % 360;
 
-        // Calculate the distance each wheel needs to travel to achieve the desired
-        // rotation
-        double turnCircumference = Math.PI * ROBOT_TRACK_WIDTH; // Circumference of the robot's turning circle
-        double rotationDistance = (turnCircumference * angle) / 360.0; // Distance each wheel must travel
-        int degreesToRotate = (int) ((rotationDistance / DISTANCE_PER_ROTATION) * 360); // Convert distance to degrees
+        // Calculate rotation time based on the robot's specifications
+        int rotationTime = (int) ((Math.abs(angle) / 360.0) * (WHEEL_DIAMETER * Math.PI) / (ROTATION_SPEED / 1000.0));
 
-        System.out.println("Rotating" + degreesToRotate);
+        if (angle < 0) {
+            leftMotor.backward();
+            rightMotor.forward();
+        } else {
+            leftMotor.forward();
+            rightMotor.backward();
+        }
 
-        leftMotor.rotate(degreesToRotate, true);
-        rightMotor.rotate(-degreesToRotate, true);
-
-        Delay.msDelay(2000);
-
-        System.out.println("Rotate finished");
-
-        // while (motorsRunning()) {
-        //     // Wait for motors to finish rotating
-        // }
-
-        resetSpeeds();
+        Delay.msDelay(rotationTime);
+        stop();
     }
 }
