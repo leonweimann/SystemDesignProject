@@ -2,59 +2,35 @@ package Coordination;
 
 import Tasks.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
- * The TaskCoordinator class is responsible for managing the execution of tasks
- * within the system. It follows the Singleton design pattern to ensure that
- * only one instance of the TaskCoordinator exists. The class maintains the
- * current phase of the system and provides methods to execute tasks and update
- * the phase.
+ * The TaskCoordinator class is responsible for managing the phases and tasks of
+ * the system. It initializes the system in the BOOTING phase and provides
+ * methods to update the phase, retrieve the current task, and execute the
+ * current task.
  * 
- * <p>
- * The TaskCoordinator initializes the system in the BOOTING phase and
- * transitions through different phases based on the system's state. It
- * retrieves and runs tasks corresponding to the current phase.
- * </p>
- * 
- * <p>
- * Usage example:
- * 
- * <pre>
- * {@code
- * TaskCoordinator coordinator = TaskCoordinator.getInstance();
- * coordinator.execute();
- * }
- * </pre>
- * </p>
- * 
- * @version 1.3
  * @author leonweimann
+ * @version 1.5
  */
 public class TaskCoordinator {
-    /** Singleton instance of the TaskCoordinator */
-    private static TaskCoordinator instance;
-
-    /** The current phase of the system */
+    /**
+     * The current phase of the system.
+     */
     private Phase currentPhase;
 
     /**
-     * Private constructor to prevent external insantiation of TaskCotordinator.
-     * Initializes the current phase to Phase.BOOTING.
+     * A list of tasks that have been completed.
      */
-    private TaskCoordinator() {
-        currentPhase = Phase.BOOTING;
-    }
+    private List<ProjectTask> completedTasks;
 
     /**
-     * Returns the singleton instance of TaskCoordinator.
-     * If the instance does not exist, it is created.
-     * 
-     * @return The singleton instance of TaskCoordinator.
+     * Creates a new TaskCoordinator instance with the current phase set to BOOTING.
      */
-    public static synchronized TaskCoordinator getInstance() {
-        if (instance == null) {
-            instance = new TaskCoordinator();
-        }
-        return instance;
+    public TaskCoordinator() {
+        currentPhase = Phase.BOOTING;
+        completedTasks = new ArrayList<>();
     }
 
     /**
@@ -71,13 +47,20 @@ public class TaskCoordinator {
      * This method first updates the phase of the task coordinator and then
      * retrieves and runs the current task.
      */
-    public static void execute() {
-        getInstance().updatePhase();
-        getInstance().getCurrentTask().run();
+    public void refresh() {
+        updatePhase();
+        getCurrentTask().run();
     }
 
     /**
-     *
+     * Transitions the system from the BOOTING phase to the next appropriate phase.
+     * This method should be called once the booting process is complete.
+     */
+    public void finishBooting() {
+        // currentPhase = Phase. TODO: Set to first phase after booting ...
+    }
+
+    /**
      * Updates the current phase of the system.
      * 
      * This method should be called regularly in the main while loop to ensure the

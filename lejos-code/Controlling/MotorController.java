@@ -1,185 +1,147 @@
 package Controlling;
 
-import Config.Ports;
+import Utils.DrivingMotor;
 
-import Utils.DynamicMotor;
 import lejos.nxt.MotorPort;
+import lejos.util.Delay;
 
 /**
- * The MotorController class is responsible for controlling the left and right
- * motors of the robot.
- * It provides an interface to adjust motor speeds, enabling the robot to move
- * and steer.
- * The main functionality centers around moving the robot with a specified angle
- * and speed.
+ * The MotorController class manages the left and right motors of the robot.
+ * It provides methods to control motor speeds, enabling movement and steering.
+ * The class supports setting base speed, moving with a specified angle, and
+ * rotating.
+ * It also includes methods for gradual and immediate stops.
  * 
  * @author leonweimann
- * @version 2.0
+ * @version 2.3
  */
 public class MotorController {
-    private static MotorController instance;
-
-    public static MotorController getInstance() {
-        if (instance == null) {
-            instance = new MotorController(Ports.MOTOR_LEFT, Ports.MOTOR_RIGHT, TouchController.getInstance());
-        }
-        return instance;
-    }
-
-    private DynamicMotor leftMotor;
-    private DynamicMotor rightMotor;
-
-    private TouchController touchController;
-
-    private boolean motorsRunning = false;
-    private boolean rotationInProgress = false;
-    private int baseSpeed = 200; // Default base speed for the robot
-
-    private static final double DISTANCE_PER_ROTATION = 17.5; // cm per full wheel rotation (example value)
-    private static final double ROBOT_TRACK_WIDTH = 15.0; // Distance between the wheels in cm (example value)
+    private DrivingMotor leftMotor;
+    private DrivingMotor rightMotor;
 
     /**
-     * Constructs a new MotorController instance with the specified motor ports for
-     * the left and right motors.
-     * 
-     * @param leftPort  The motor port to which the left motor is connected.
-     * @param rightPort The motor port to which the right motor is connected.
+     * The default speed for the motor controller.
+     * This value is used when no other speed is specified.
      */
-    public MotorController(MotorPort leftPort, MotorPort rightPort, TouchController touchController) {
-        this.leftMotor = new DynamicMotor(leftPort);
-        this.rightMotor = new DynamicMotor(rightPort);
-        this.touchController = touchController;
-    }
+    private static final int DEFAULT_SPEED = 500;
 
     /**
-     * Sets the base speed for the robot's movement.
-     * 
-     * @param speed The base speed to be used for movement (in degrees per second).
+     * The distance each wheel travels per full rotation in centimeters.
      */
-    public void setBaseSpeed(int speed) {
-        this.baseSpeed = speed;
-    }
+    private static final int WHEEL_DIAMETER = 3;
+
+    private static final int ROBOT_WIDTH = 13;
 
     /**
-     * Resets the base speed to the default value.
-     * Also resets the current speed to ensure smooth acceleration from default.
-     */
-    public void resetSpeed() {
-        this.baseSpeed = 200;
-        // this.leftMotor.resetCurrentSpeed();
-        // this.rightMotor.resetCurrentSpeed();
-    }
-
-    /**
-     * Moves the robot by adjusting motor speeds based on the specified angle and
-     * base speed.
-     * A positive angle means turning right, and a negative angle means turning
-     * left.
-     * The method adjusts the motor speeds proportionally to make smoother turns.
+     * Constructs a MotorController with specified motor ports for left and right
+     * motors.
      * 
-     * @param angle The angle to steer the robot, where -100 represents a full left
-     *              turn and 100 represents a full right turn.
-     *              Values in between adjust the steering proportionally.
+     * @param leftPort  The motor port for the left motor.
+     * @param rightPort The motor port for the right motor.
+     */
+    public MotorController(MotorPort leftPort, MotorPort rightPort) {
+        this.leftMotor = new DrivingMotor(leftPort);
+        this.rightMotor = new DrivingMotor(rightPort);
+    }
+
+    /**
+     * Checks if either of the motors is currently running.
+     * 
+     * @return true if either motor is running, false otherwise.
+     */
+    public boolean motorsRunning() {
+        return leftMotor.isMoving() || rightMotor.isMoving();
+    }
+
+    /**
+     * Sets the speed for both motors.
+     * 
+     * @param speed The speed to set for both motors.
+     */
+    public void setSpeeds(int speed) {
+        leftMotor.setSpeed(speed);
+        rightMotor.setSpeed(speed);
+    }
+
+    /**
+     * Resets the speeds of both motors to the default speed.
+     */
+    public void resetSpeeds() {
+        leftMotor.setSpeed(DEFAULT_SPEED);
+        rightMotor.setSpeed(DEFAULT_SPEED);
+    }
+
+    /**
+     * Moves the robot by adjusting motor speeds based on the specified angle.
+     * Positive angle turns right, negative angle turns left.
+     * 
+     * @param angle The angle to steer the robot, from -100 (full left) to 100 (full
+     *              right).
      */
     public void moveWithAngle(int angle) {
-        if (rotationInProgress) {
-            return; // Prevent other motor actions during rotation
-        }
-
         int leftSpeed;
         int rightSpeed;
 
-        // Clamp angle to be between -100 and 100
-        angle = Math.max(-100, Math.min(100, angle));
+        // Clamp angle to be between -90 and 90
+        angle = Math.max(-90, Math.min(90, angle));
 
         if (angle < 0) { // Turn left
-            leftSpeed = (int) (baseSpeed * (1.0 + angle / 100.0));
-            rightSpeed = baseSpeed;
+            leftSpeed = (int) (DEFAULT_SPEED * (1.0 + angle / 100.0));
+            rightSpeed = DEFAULT_SPEED;
         } else if (angle > 0) { // Turn right
-            leftSpeed = baseSpeed;
-            rightSpeed = (int) (baseSpeed * (1.0 - angle / 100.0));
+            leftSpeed = DEFAULT_SPEED;
+            rightSpeed = (int) (DEFAULT_SPEED * (1.0 - angle / 100.0));
         } else { // Move straight
-            leftSpeed = baseSpeed;
-            rightSpeed = baseSpeed;
+            leftSpeed = DEFAULT_SPEED;
+            rightSpeed = DEFAULT_SPEED;
         }
 
-        leftMotor.adjustSpeedDynamically(leftSpeed);
-        rightMotor.adjustSpeedDynamically(rightSpeed);
+        leftMotor.setSpeed(leftSpeed);
+        rightMotor.setSpeed(rightSpeed);
 
-        if (!motorsRunning) {
-            leftMotor.setBackward();
-            rightMotor.setBackward();
-            motorsRunning = true;
-        }
-    }
-
-    /**
-     * Stops both motors gradually.
-     * The motors decelerate dynamically until they stop.
-     */
-    public void stopGradually() {
-        leftMotor.adjustSpeedDynamically(0);
-        rightMotor.adjustSpeedDynamically(0);
-
-        if (leftMotor.isStopped() && rightMotor.isStopped()) {
-            motorsRunning = false;
-            rotationInProgress = false;
+        if (!motorsRunning()) {
+            leftMotor.backward();
+            rightMotor.backward();
         }
     }
 
     /**
-     * Stops both motors immediately, like an emergency brake.
+     * Stops both motors immediately and resets their speeds.
      */
-    public void hardStop() {
-        leftMotor.hardStop();
-        rightMotor.hardStop();
-        motorsRunning = false;
-        rotationInProgress = false;
+    public void stop() {
+        leftMotor.stop();
+        rightMotor.stop();
+        resetSpeeds();
     }
 
     /**
      * Rotates the robot by a specified angle.
-     * A positive angle rotates to the right, and a negative angle rotates to the
-     * left.
-     * The method ensures no other motor actions are executed during the rotation.
-     * The input angle is normalized to be within -360 to 360 degrees.
-     * 
-     * @param angle The angle to rotate the robot, which will be normalized to be
-     *              within -360 to 360 degrees.
-     *              Negative values indicate a left turn, positive values indicate a
-     *              right turn.
+     *
+     * @param angle the angle in degrees to rotate the robot. Positive values rotate
+     *              clockwise, and negative values rotate counterclockwise. The
+     *              angle is normalized to the range [0, 360).
      */
     public void rotate(int angle) {
-        rotationInProgress = true;
+        final int ROTATION_SPEED = 250; // [Degrees / Second] // Custom speed for rotation TODO: Adjust
+        setSpeeds(ROTATION_SPEED);
 
-        // Normalize the angle to be within -360 to 360 degrees
-        angle = angle % 360;
+        int normalizedAngle = Math.abs(angle) % 360;  // Normalize angle to the range [0, 360)
+        
+        // Calculate the time needed to rotate the robot by the specified angle
+        double travelDistance = (normalizedAngle / 360.0) * ROBOT_WIDTH;
+        double wheelSpeedPerRotation = ROTATION_SPEED / 360.0;
+        int rotationTime = (int) ((travelDistance / WHEEL_DIAMETER) * wheelSpeedPerRotation * 1000); // Cast to int to ignore decimal part
 
-        // Calculate the distance each wheel needs to travel to achieve the desired
-        // rotation
-        double turnCircumference = Math.PI * ROBOT_TRACK_WIDTH; // Circumference of the robot's turning circle
-        double rotationDistance = (turnCircumference * Math.abs(angle)) / 360.0; // Distance each wheel must travel
-        int degreesToRotate = (int) ((rotationDistance / DISTANCE_PER_ROTATION) * 360); // Convert distance to degrees
-
-        leftMotor.adjustSpeedDynamically(baseSpeed);
-        rightMotor.adjustSpeedDynamically(baseSpeed);
-
-        if (angle < 0) { // Rotate left
-            leftMotor.rotate(-degreesToRotate);
-            rightMotor.rotate(degreesToRotate);
-        } else if (angle > 0) { // Rotate right
-            leftMotor.rotate(degreesToRotate);
-            rightMotor.rotate(-degreesToRotate);
+        // Determine the direction of rotation based on the sign of the angle
+        if (angle < 0) {
+            leftMotor.backward();
+            rightMotor.forward();
+        } else {
+            leftMotor.forward();
+            rightMotor.backward();
         }
 
-        while (leftMotor.isMoving() || rightMotor.isMoving()) {
-            // Check if the touch sensor detects an obstacle
-            if (touchController.obstacleFound()) {
-                hardStop();
-                break; // Stop rotation if an obstacle is detected
-            }
-        }
-
-        rotationInProgress = false;
+        Delay.msDelay(rotationTime); // Wait so the robot rotates as long as needed to reach the angle
+        stop(); // Stop rotating
     }
 }

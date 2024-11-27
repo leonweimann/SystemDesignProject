@@ -1,6 +1,6 @@
 package Tasks;
 
-public class LineFollower implements Task {
+public class LineFollower extends Task {
     @Override
     public void run() {
         

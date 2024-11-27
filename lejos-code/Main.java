@@ -1,5 +1,4 @@
 import Coordination.RuntimeCoordinator;
-import Coordination.TaskCoordinator;
 
 /**
  * The Main class is responsible for initializing and running the robot program.
@@ -7,40 +6,23 @@ import Coordination.TaskCoordinator;
  * until a user presses a button to stop the program.
  * 
  * @author leonweimann
- * @version 1.6
+ * @version 1.9
  */
 public class Main {
     /**
      * The runtime coordinator responsible for managing the runtime environment.
      */
-    private static RuntimeCoordinator runtime = new RuntimeCoordinator(); // TODOD: Maybe Singleton better, since internal phase is needed anywhere ...
+    private static RuntimeCoordinator runtime = RuntimeCoordinator.getInstance();
 
     /**
-     * The main entry point for the application.
+     * The main method initializes the runtime environment and starts the program.
+     * It catches any exceptions thrown during execution and prints the error
+     * message to the console.
      * 
-     * <p>
-     * This method initializes the runtime environment and enters a loop where it
-     * continuously executes tasks coordinated by the TaskCoordinator until the
-     * runtime
-     * signals to stop. If an exception occurs during execution, it is caught and
-     * its
-     * message is printed to the standard output.
-     * </p>
-     * 
-     * @param args Command-line arguments passed to the application.
+     * @param args The command line arguments.
      */
     public static void main(String[] args) {
-        try {
-            runtime.boot();
-
-            while (runtime.shouldRun()) {
-                TaskCoordinator.execute();
-            }
-        } catch (Exception e) {
-            // TODO: Add handler to RuntimeCoordinator -> Thrown Exceptions from excecution
-            // must be handled as well there, so may rething integration of runtime
-            // internally.
-            System.out.println(e.getMessage());
-        }
+        runtime.boot();
+        runtime.execute();
     }
 }

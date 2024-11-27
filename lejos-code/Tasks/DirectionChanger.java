@@ -1,16 +1,8 @@
 package Tasks;
 
-import Controlling.MotorController;
-
-public class DirectionChanger implements Task {
-    private MotorController motorController;
-
-    public DirectionChanger() {
-        motorController = MotorController.getInstance();
-    }
-
+public class DirectionChanger extends Task {
     @Override
-    public void run() {
-        motorController.rotate(360);
+    public void run() { // TODO: Handle also positioning etc.
+        
     }
 }

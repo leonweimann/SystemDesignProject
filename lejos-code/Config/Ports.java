@@ -11,10 +11,9 @@ import lejos.nxt.MotorPort;
  * The class is designed as a utility class with a private constructor to prevent instantiation.
  * 
  * @author leonweimann
- * @version 1.0
+ * @version 1.1
  */
-public class Ports {
-
+public final class Ports {
     // Private constructor to prevent instantiation
     private Ports() {
     }
