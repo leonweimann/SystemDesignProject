@@ -16,7 +16,7 @@ public abstract class Test {
     /**
      * The current count of tests that have been executed.
      */
-    public byte currentTestCount = 0;
+    public int currentTestCount = 0;
 
     /**
      * Initializes the system by displaying a greeting and performing setup
