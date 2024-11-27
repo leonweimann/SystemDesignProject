@@ -133,7 +133,7 @@ public class MotorController {
 
         System.out.println("rotationTime: " + rotationTime);
         System.out.println(travelDistance);
-        System.out.println(wheelSpeedPerRotation);
+        System.out.println("Test " + wheelSpeedPerRotation);
         Delay.msDelay(1000);
 
         if (angle < 0) {
