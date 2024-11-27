@@ -3,6 +3,7 @@ package Controlling;
 import Utils.DrivingMotor;
 
 import lejos.nxt.MotorPort;
+import lejos.util.Delay;
 
 /**
  * The MotorController class manages the left and right motors of the robot.
@@ -136,9 +137,11 @@ public class MotorController {
         leftMotor.rotate(degreesToRotate, true);
         rightMotor.rotate(-degreesToRotate, true);
 
-        while (motorsRunning()) {
-            // Wait for motors to finish rotating
-        }
+        Delay.msDelay(2000);
+
+        // while (motorsRunning()) {
+        //     // Wait for motors to finish rotating
+        // }
 
         resetSpeeds();
     }
