@@ -126,7 +126,9 @@ public class MotorController {
         setSpeeds(ROTATION_SPEED);
         angle = angle % 360;
 
-        int tst = 3;
+        double travelDistance = (Math.abs(angle) / 360.0) * ROBOT_WIDHT;
+        double wheelSpeedPerRotation = ROTATION_SPEED / 360;
+        long rotationTime = (long) ((travelDistance / WHEEL_DIAMETER) * wheelSpeedPerRotation);
 
         if (angle < 0) {
             leftMotor.backward();
@@ -136,7 +138,7 @@ public class MotorController {
             rightMotor.backward();
         }
 
-        Delay.msDelay(1000);
+        Delay.msDelay(rotationTime);
         stop();
     }
 }
