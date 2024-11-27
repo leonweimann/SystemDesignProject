@@ -5,6 +5,7 @@ import Controlling.*;
 
 import lejos.nxt.Button;
 import lejos.nxt.LCD;
+import lejos.util.Delay;
 
 /**
  * The {@code RuntimeCoordinator} class is responsible for managing the booting
@@ -13,9 +14,18 @@ import lejos.nxt.LCD;
  * user cancellation requests.
  * 
  * @author leonweimann
- * @version 1.8
+ * @version 1.9
  */
 public final class RuntimeCoordinator {
+    /**
+     * The frequency at which the runtime coordinator executes its tasks.
+     * This value is specified in Hertz (Hz), indicating the number of times
+     * the tasks are executed per second.
+     * 
+     * In this case, the tasks are executed {@code 5 times per second}.
+     */
+    private static final int EXCECUTION_FREQUENCY = 5;
+
     /**
      * Singleton instance of the RuntimeCoordinator class.
      * This static variable holds the single instance of the RuntimeCoordinator
@@ -124,6 +134,7 @@ public final class RuntimeCoordinator {
     public void execute() {
         while (shouldRun()) {
             taskCoordinator.refresh();
+            Delay.msDelay(1000 / EXCECUTION_FREQUENCY);
         }
     }
 

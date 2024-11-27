@@ -11,6 +11,6 @@ public class TouchController {
     }
 
     public boolean obstacleFound() {
-        return sensor.isPressed(); // Check with status verfolgung. d.h. er weis welche phase wir sind etc.
+        return sensor.isPressed(); // TODO: Check with status verfolgung. d.h. er weis welche phase wir sind etc.
     }
 }
