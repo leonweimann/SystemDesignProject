@@ -2,6 +2,7 @@ package Coordination;
 
 import Config.Ports;
 import Controlling.*;
+import Models.Phase;
 
 import lejos.nxt.Button;
 import lejos.nxt.LCD;
