@@ -102,7 +102,6 @@ public final class RuntimeCoordinator {
         // Add setup phase 1 logic here
 
         System.out.println("Calibrating light sensors...");
-        System.out.println("Place over black line and \npress Enter, then place over \nwhite surface and press Enter");
         lightController.calibrateSensors();
         System.out.println("Light sensors calibrated");
     }

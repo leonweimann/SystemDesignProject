@@ -25,14 +25,19 @@ public final class UserInputHandler {
     }
 
     /**
-     * Waits for the specified button to be pressed before continuing execution.
+     * Waits for the specified button to be pressed and then released before continuing execution.
      *
      * @param btn the button to wait for
      */
     public static void awaitButtonPress(Button btn) {
-        System.out.println("Press any" + btn.getId() + " to continue ...");
+        System.out.println("Press " + btn.getId() + " to continue ...");
+        // Wait for button press
         while (!isButtonPressed(btn)) {
-            // Wait for button press
+            // Do nothing, just wait for the button to be pressed
+        }
+        // Wait for button release
+        while (isButtonPressed(btn)) {
+            // Do nothing, just wait for the button to be released
         }
         System.out.println("Continuing execution ...");
     }
