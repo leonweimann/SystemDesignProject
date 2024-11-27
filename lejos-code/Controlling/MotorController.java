@@ -127,12 +127,13 @@ public class MotorController {
         angle = angle % 360;
 
         // Calculate rotation time based on the robot's specifications
-        double travelDistance = (Math.abs(angle) / 360.0) * Math.PI * ROBOT_WIDHT;
-        double wheelDistancePerRotation = Math.PI * WHEEL_DIAMETER;
+        double travelDistance = (Math.abs(angle) / 360.0) * ROBOT_WIDHT;
         double wheelSpeedPerRotation = ROTATION_SPEED / 360;
-        long rotationTime = (long) ((travelDistance / wheelDistancePerRotation) * wheelSpeedPerRotation);
+        long rotationTime = (long) ((travelDistance / WHEEL_DIAMETER) * wheelSpeedPerRotation);
 
         System.out.println("rotationTime: " + rotationTime);
+        System.out.println(travelDistance);
+        System.out.println(wheelSpeedPerRotation);
         Delay.msDelay(1000);
 
         if (angle < 0) {
