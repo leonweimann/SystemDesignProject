@@ -50,7 +50,7 @@ public final class UserInputHandler {
      * button for 3 seconds to exit the program.
      */
     public static void awaitContinueOrExit() {
-        System.out.println("Press ENTER to continue or hold ESCAPE for 3 seconds to exit ...");
+        System.out.println("Press any button to continue or hold ESCAPE for 3 seconds to exit ...");
         long escapePressStartTime = 0;
         while (true) {
             if (Button.ESCAPE.isDown()) {

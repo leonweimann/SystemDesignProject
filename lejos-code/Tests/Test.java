@@ -17,7 +17,7 @@ public abstract class Test {
     /**
      * The current count of tests that have been executed.
      */
-    public int currentTestCount = 0;
+    public byte currentTestCount = 0;
 
     /**
      * Initializes the system by displaying a greeting and performing setup
@@ -40,6 +40,7 @@ public abstract class Test {
      */
     private void showGreeting() {
         UserInputHandler.awaitContinueOrExit();
+        displayCurrentTestCount();
     }
 
     /**
@@ -74,12 +75,9 @@ public abstract class Test {
      */
     private boolean checkExitCondition() {
         if (exitCondition()) {
-            System.out.println("Hold left and right button \nfor 5 seconds to exit ...");
             long startTime = System.currentTimeMillis();
             while (exitCondition()) {
                 if (System.currentTimeMillis() - startTime > 5000) {
-                    System.out.println("Exiting test ...");
-                    Delay.msDelay(1000);
                     return true;
                 }
             }
