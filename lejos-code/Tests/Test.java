@@ -1,5 +1,6 @@
 package Tests;
 
+import Coordination.UserInputHandler;
 import lejos.nxt.Button;
 import lejos.nxt.LCD;
 import lejos.util.Delay;
@@ -38,8 +39,7 @@ public abstract class Test {
      * It prints the class name and prompts the user to press any button to start.
      */
     private void showGreeting() {
-        System.out.println("Press any button to start the test.");
-        Button.waitForAnyPress();
+        UserInputHandler.awaitContinueOrExit();
     }
 
     /**

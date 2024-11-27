@@ -7,7 +7,7 @@ import Controlling.MotorController;
  * Test class to verify the driving capabilities of the motor controller.
  * 
  * @author leonweimann
- * @version 1.1
+ * @version 1.2
  */
 public class DrivingCapabilityTest extends Test {
     private MotorController controller = RuntimeCoordinator.getInstance().motorController;
@@ -29,6 +29,9 @@ public class DrivingCapabilityTest extends Test {
                 return true;
             case 2:
                 controller.moveWithAngle(100);
+                return true;
+            case 3:
+                controller.moveWithAngle(-50);
                 return true;
             case 4:
                 controller.rotate(360);
