@@ -7,23 +7,14 @@ import lejos.nxt.LightSensor;
 import lejos.nxt.SensorPort;
 
 /**
- * The LightFluctuationController class is responsible for coordinating and
- * managing multiple light sensors.
- * It provides higher-level functionality for analyzing light data from multiple
- * sensors and determining if significant fluctuations are occurring.
- * This class uses instances of LightSensorAdapter to read and analyze data from
- * each sensor, and potentially aggregate data for comparison.
- * 
- * Responsibilities:
- * - Manage multiple LightSensorAdapter instances.
- * - Compare light values between different sensors.
- * - Detect synchronized or significant fluctuations in light data across
- * multiple sensors.
- * - Provide methods to aggregate and analyze light intensity data from multiple
- * sources.
+ * The LightFluctuationController class is responsible for controlling the light
+ * sensors and detecting black lines on the ground. The class uses Exponential
+ * Moving Average (EMA) to update the thresholds for black detection and performs
+ * a differential comparison to enhance accuracy. The class also maintains a
+ * symbol buffer to store the last few symbols detected by the sensors.
  * 
  * @author leonweimann
- * @version 1.5
+ * @version 1.6
  */
 public class LightFluctuationController {
     private LightSensor leftSensor;
@@ -81,12 +72,14 @@ public class LightFluctuationController {
     }
 
     /**
-     * Determines whether the left, right, and center sensors detect a black surface.
+     * Determines whether the left, right, and center sensors detect a black
+     * surface.
      * The method uses Exponential Moving Average (EMA) to update the thresholds
      * for black detection and performs a differential comparison to enhance
      * accuracy.
      *
-     * @return A Symbol object indicating if the left, right, and center sensors detect black.
+     * @return A Symbol object indicating if the left, right, and center sensors
+     *         detect black.
      */
     public Symbol readSymbol() {
         int leftReading = leftSensor.getLightValue();
