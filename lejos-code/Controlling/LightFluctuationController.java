@@ -1,7 +1,7 @@
 package Controlling;
 
 import Coordination.UserInputHandler;
-
+import Models.Symbol;
 import lejos.nxt.Button;
 import lejos.nxt.LightSensor;
 import lejos.nxt.SensorPort;
@@ -23,7 +23,7 @@ import lejos.nxt.SensorPort;
  * sources.
  * 
  * @author leonweimann
- * @version 1.3
+ * @version 1.5
  */
 public class LightFluctuationController {
     public LightFluctuationController(SensorPort leftPort, SensorPort rightPort) {
@@ -39,7 +39,7 @@ public class LightFluctuationController {
     private static final double ALPHA = 0.1; // Smoothing factor for EMA
     private static final int DIFFERENCE_THRESHOLD = 10; // Threshold for differential comparison
 
-    private boolean[] symbolBuffer = new boolean[SYMBOL_BUFFER_SIZE];
+    private Symbol[] symbolBuffer = new Symbol[SYMBOL_BUFFER_SIZE];
     private int symbolIndex = 0; // TODO: Currently never resetted, instead worked with modulo. Could lead to
                                  // overflow...
     private static final int SYMBOL_BUFFER_SIZE = 8;
@@ -78,11 +78,9 @@ public class LightFluctuationController {
      * for black detection and performs a differential comparison to enhance
      * accuracy.
      *
-     * @return A boolean array where the first element indicates if the left sensor
-     *         detects black and the second element indicates if the right sensor
-     *         detects black.
+     * @return A Symbol object indicating if the left and right sensors detect black.
      */
-    public boolean[] getIsBlack() {
+    public Symbol getIsBlack() {
         int leftReading = leftSensor.getLightValue();
         int rightReading = rightSensor.getLightValue();
 
@@ -101,7 +99,7 @@ public class LightFluctuationController {
             isRightBlack = difference > 0;
         }
 
-        return new boolean[] { isLeftBlack, isRightBlack };
+        return new Symbol(isLeftBlack, isRightBlack);
     }
 
     /**
@@ -112,9 +110,9 @@ public class LightFluctuationController {
      * @return true if the last symbol in the buffer matches the given color, false
      *         otherwise.
      */
-    private boolean isAlreadyLastSymbol(boolean isBlack) {
+    private boolean isAlreadyLastSymbol(Symbol symbol) {
         int lastIndex = (symbolIndex - 1 + SYMBOL_BUFFER_SIZE) % SYMBOL_BUFFER_SIZE;
-        return symbolBuffer[lastIndex] == isBlack;
+        return symbolBuffer[lastIndex].equals(symbol);
     }
 
     /**
@@ -126,8 +124,8 @@ public class LightFluctuationController {
      *                The index is then incremented and wrapped around if it
      *                exceeds the buffer size.
      */
-    private void insertSymbol(boolean isBlack) {
-        symbolBuffer[symbolIndex] = isBlack;
+    private void insertSymbol(Symbol symbol) {
+        symbolBuffer[symbolIndex] = symbol;
         symbolIndex = (symbolIndex + 1) % SYMBOL_BUFFER_SIZE;
     }
 
@@ -144,7 +142,7 @@ public class LightFluctuationController {
         for (int i = 0; i < SYMBOL_BUFFER_SIZE - 1; i++) {
             symbolBuffer[i] = symbolBuffer[i + 1];
         }
-        symbolBuffer[SYMBOL_BUFFER_SIZE - 1] = false; // or any default value
+        symbolBuffer[SYMBOL_BUFFER_SIZE - 1] = new Symbol(false, false); // or any default value
     }
 
     /**
@@ -154,7 +152,7 @@ public class LightFluctuationController {
      */
     public void resetSymbolBuffer() {
         for (int i = 0; i < SYMBOL_BUFFER_SIZE; i++) {
-            symbolBuffer[i] = false; // or any default value
+            symbolBuffer[i] = new Symbol(false, false); // or any default value
         }
     }
 
@@ -167,11 +165,11 @@ public class LightFluctuationController {
      *
      * @param isBlack a boolean indicating whether the current symbol is black
      */
-    public void updateSymbolBuffer(boolean isBlack) {
-        if (isAlreadyLastSymbol(isBlack))
+    public void updateSymbolBuffer(Symbol symbol) {
+        if (isAlreadyLastSymbol(symbol))
             return;
 
-        insertSymbol(isBlack);
+        insertSymbol(symbol);
 
         if (symbolIndex >= SYMBOL_BUFFER_SIZE)
             removeFirstSymbol();
@@ -182,7 +180,7 @@ public class LightFluctuationController {
      *
      * @return a boolean array representing the current symbol buffer.
      */
-    public boolean[] currentSymbol() {
+    public Symbol[] currentSymbol() {
         return symbolBuffer;
     }
 }

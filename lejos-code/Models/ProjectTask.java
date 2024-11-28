@@ -1,4 +1,4 @@
-package Coordination;
+package Models;
 
 /**
  * Enum representing various tasks that can be performed in the project.

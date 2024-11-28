@@ -1,4 +1,4 @@
-package Coordination;
+package Models;
 
 public enum Phase {
     BOOTING,

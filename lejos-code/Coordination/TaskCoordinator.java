@@ -1,5 +1,7 @@
 package Coordination;
 
+import Models.Phase;
+import Models.ProjectTask;
 import Tasks.*;
 
 import java.util.ArrayList;
