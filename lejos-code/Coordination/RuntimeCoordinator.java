@@ -78,7 +78,8 @@ public final class RuntimeCoordinator {
 
         motorController = new MotorController(Ports.MOTOR_LEFT, Ports.MOTOR_RIGHT);
         touchController = new TouchController(Ports.TOUCH_SENSOR);
-        lightController = new LightFluctuationController(Ports.LIGHT_SENSOR_LEFT, Ports.LIGHT_SENSOR_RIGHT, Ports.LIGHT_SENSOR_CENTER);
+        lightController = new LightFluctuationController(Ports.LIGHT_SENSOR_LEFT, Ports.LIGHT_SENSOR_RIGHT,
+                Ports.LIGHT_SENSOR_CENTER);
     }
 
     /**
@@ -134,7 +135,7 @@ public final class RuntimeCoordinator {
     public void execute() {
         while (shouldRun()) {
             taskCoordinator.refresh();
-            Delay.msDelay(1000 / EXCECUTION_FREQUENCY);
+            executionFrequencyDelay();
         }
     }
 
@@ -178,5 +179,15 @@ public final class RuntimeCoordinator {
 
         boolean isBooting = taskCoordinator.getPhase() != Phase.BOOTING;
         return !isBooting;
+    }
+
+    /**
+     * Introduces a delay based on the execution frequency.
+     * The delay duration is calculated as 1000 milliseconds divided by the
+     * execution frequency. This method is useful for controlling the rate at which
+     * certain operations are performed.
+     */
+    public static void executionFrequencyDelay() {
+        Delay.msDelay(1000 / EXCECUTION_FREQUENCY);
     }
 }
