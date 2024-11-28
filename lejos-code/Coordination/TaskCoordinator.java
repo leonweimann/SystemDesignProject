@@ -5,7 +5,6 @@ import Models.ProjectTask;
 import Tasks.*;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * The TaskCoordinator class is responsible for managing the phases and tasks of
@@ -25,7 +24,7 @@ public class TaskCoordinator {
     /**
      * A list of tasks that have been completed.
      */
-    private List<ProjectTask> completedTasks;
+    private ArrayList<ProjectTask> completedTasks;
 
     /**
      * Creates a new TaskCoordinator instance with the current phase set to BOOTING.

@@ -57,7 +57,6 @@ public final class RuntimeCoordinator {
 
     /**
      * Returns the singleton instance of the RuntimeCoordinator.
-     * This method is synchronized to ensure thread safety.
      * If the instance is null, it initializes a new RuntimeCoordinator.
      *
      * @return the singleton instance of RuntimeCoordinator
