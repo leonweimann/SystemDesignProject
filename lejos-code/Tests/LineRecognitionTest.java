@@ -2,7 +2,6 @@ package Tests;
 
 import Coordination.RuntimeCoordinator;
 import Controlling.LightFluctuationController;
-import Models.Symbol;
 
 /**
  * LineRecognitionTest is a test class that extends the Test class.
@@ -10,7 +9,7 @@ import Models.Symbol;
  * in recognizing lines using light sensors.
  * 
  * @author leonweimann
- * @version 1.2
+ * @version 1.3
  */
 public class LineRecognitionTest extends Test {
     private LightFluctuationController controller = RuntimeCoordinator.getInstance().lightController;
@@ -22,8 +21,7 @@ public class LineRecognitionTest extends Test {
 
     @Override
     protected boolean executionLoop() {
-        Symbol isBlack = controller.getIsBlack();
-        System.out.println("L: " + isBlack.isLeftBlack() + ", R: " + isBlack.isRightBlack());
+        System.out.println(controller.readSymbol().debugDescription());
         return true; // Continue execution
     }
 }
