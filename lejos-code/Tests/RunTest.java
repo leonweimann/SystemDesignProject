@@ -5,7 +5,7 @@ package Tests;
  */
 public class RunTest {
     public static void main(String[] args) {
-        Test test = new DrivingCapabilityTest(); // Change this line to run a different test
+        Test test = new LineFollowerTaskTest(); // Change this line to run a different test
         test.boot();
     }
 }

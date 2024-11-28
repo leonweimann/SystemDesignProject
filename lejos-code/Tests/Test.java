@@ -75,7 +75,7 @@ public abstract class Test {
      * @return true if the exit condition is confirmed after 5 seconds, false
      *         otherwise.
      */
-    private boolean checkExitCondition() {
+    static public boolean checkExitCondition() { // TODO: Make private and remove static after testing
         if (exitCondition()) {
             long startTime = System.currentTimeMillis();
             while (exitCondition()) {
@@ -87,12 +87,15 @@ public abstract class Test {
         return false;
     }
 
+    // TODO: General, should there be access to this methods for while loops in
+    // tasks for e.g.?
+
     /**
      * Checks if both the LEFT and RIGHT buttons are pressed down.
      *
      * @return true if both LEFT and RIGHT buttons are pressed, false otherwise.
      */
-    private boolean exitCondition() {
+    static private boolean exitCondition() { // TODO: Remove static after testing
         return Button.LEFT.isDown() && Button.RIGHT.isDown();
     }
 

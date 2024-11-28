@@ -6,6 +6,7 @@ import Controlling.TouchController;
 import Coordination.RuntimeCoordinator;
 import Models.Direction;
 import Models.Symbol;
+import Tests.Test;
 
 public class LineFollower extends Task {
     public LineFollower() {
@@ -77,7 +78,8 @@ public class LineFollower extends Task {
         motorController.stop();
     }
 
-    private void searchLine() {
+    // TODO: After testing, make this method to a private
+    public void searchLine() {
         foundLineIfNecessary = false;
 
         int iterations = 0;
@@ -86,6 +88,10 @@ public class LineFollower extends Task {
             iterations++;
             // Ensure correct execution frequency to prevent excessive CPU usage
             RuntimeCoordinator.executionFrequencyDelay();
+
+            if (Test.checkExitCondition()) {
+                return;
+            }
 
             if (touchController.obstacleFound()) {
                 // TODO: Maybe better reverse last moves if an obstacle is found?
