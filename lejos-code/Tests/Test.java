@@ -97,7 +97,7 @@ public abstract class Test {
      * @return true if both LEFT and RIGHT buttons are pressed, false otherwise.
      */
     private boolean exitCondition() {
-        return Button.LEFT.isDown() && Button.RIGHT.isDown();
+        return (Button.LEFT.isDown() && Button.RIGHT.isDown()) || currentTestCount < 0;
     }
 
     /**
