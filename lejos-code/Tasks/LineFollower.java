@@ -77,42 +77,42 @@ public class LineFollower extends Task {
         motorController.stop();
     }
 
-    private void searchLine() {
-        foundLineIfNecessary = false;
+    // private void searchLine() {
+    //     foundLineIfNecessary = false;
 
-        int iterations = 0;
-        boolean searchLeft = false;
-        while (!foundLineIfNecessary) {
-            iterations++;
-            // Ensure correct execution frequency to prevent excessive CPU usage
-            RuntimeCoordinator.executionFrequencyDelay();
+    //     int iterations = 0;
+    //     boolean searchLeft = false;
+    //     while (!foundLineIfNecessary) {
+    //         iterations++;
+    //         // Ensure correct execution frequency to prevent excessive CPU usage
+    //         RuntimeCoordinator.executionFrequencyDelay();
 
-            if (touchController.obstacleFound()) {
-                // TODO: Maybe better reverse last moves if an obstacle is found?
-                motorController.backOff();
-                iterations--; // Retry iteration cycle
-                continue;
-            }
+    //         if (touchController.obstacleFound()) {
+    //             // TODO: Maybe better reverse last moves if an obstacle is found?
+    //             motorController.backOff();
+    //             iterations--; // Retry iteration cycle
+    //             continue;
+    //         }
 
-            if (iterations > 2 && iterations % 2 == 0) {
-                motorController.backOff(); // Move backward periodically to expand search area
-            }
+    //         if (iterations > 2 && iterations % 2 == 0) {
+    //             motorController.backOff(); // Move backward periodically to expand search area
+    //         }
 
-            // Dynamically expand search angle
-            int angle = (searchLeft ? SEARCH_ANGLE : -SEARCH_ANGLE) * ((iterations % 2) + 1);
+    //         // Dynamically expand search angle
+    //         int angle = (searchLeft ? SEARCH_ANGLE : -SEARCH_ANGLE) * ((iterations % 2) + 1);
 
-            motorController.rotateWith(angle, () -> checkSymbolForLine()); // Rotate and check for line
+    //         motorController.rotateWith(angle, () -> checkSymbolForLine()); // Rotate and check for line
 
-            // No line found, switch direction
-            searchLeft = !searchLeft;
+    //         // No line found, switch direction
+    //         searchLeft = !searchLeft;
 
-            // Abort search after 10 iterations
-            if (iterations > 10) {
-                motorController.stop();
-                System.exit(0);
-            }
-        }
-    }
+    //         // Abort search after 10 iterations
+    //         if (iterations > 10) {
+    //             motorController.stop();
+    //             System.exit(0);
+    //         }
+    //     }
+    // }
 
     private void checkSymbolForLine() {
         Symbol s = currentSymbol();
