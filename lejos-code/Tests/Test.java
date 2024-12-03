@@ -1,5 +1,6 @@
 package Tests;
 
+import Coordination.RuntimeCoordinator;
 import Coordination.UserInputHandler;
 import lejos.nxt.Button;
 import lejos.nxt.LCD;
@@ -11,7 +12,7 @@ import lejos.util.Delay;
  * for user input to start the test and to either repeat the test or exit.
  * 
  * @author leonweimann
- * @version 1.3
+ * @version 1.4
  */
 public abstract class Test {
     /**
@@ -29,8 +30,11 @@ public abstract class Test {
         showGreeting();
         setup();
         while (executionLoop()) {
-            if (checkExitCondition())
+            attachMultiTesting();
+            if (checkExitCondition()) {
                 break;
+            }
+            RuntimeCoordinator.executionFrequencyDelay();
         }
         System.out.println("Test completed.");
         Delay.msDelay(1000);
@@ -105,11 +109,17 @@ public abstract class Test {
     public void attachMultiTesting() {
         if (Button.LEFT.isDown()) {
             while (Button.LEFT.isDown()) {
+                if (Button.RIGHT.isDown()) {
+                    return;
+                }
             }
             currentTestCount--;
             displayCurrentTestCount();
         } else if (Button.RIGHT.isDown()) {
             while (Button.RIGHT.isDown()) {
+                if (Button.LEFT.isDown()) {
+                    return;
+                }
             }
             currentTestCount++;
             displayCurrentTestCount();
