@@ -25,6 +25,7 @@ public class DrivingCapabilityTest extends Test {
                 return true;
             case 1:
                 controller.moveWithAngle(50);
+
                 return true;
             case 2:
                 controller.moveWithAngle(100);
@@ -34,7 +35,6 @@ public class DrivingCapabilityTest extends Test {
                 return true;
             case 4:
                 controller.rotate(360);
-                currentTestCount++;
                 return true;
             default:
                 return false;

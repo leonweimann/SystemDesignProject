@@ -1,6 +1,6 @@
 package Tasks;
 
-public class ObstacleAvoider extends Task {
+public class ObstacleHandler extends Task {
     @Override
     public void run() {
         

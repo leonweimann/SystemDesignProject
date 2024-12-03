@@ -4,7 +4,7 @@ import Models.Phase;
 import Models.ProjectTask;
 import Tasks.*;
 
-import java.util.ArrayList;
+// import java.util.ArrayList;
 
 /**
  * The TaskCoordinator class is responsible for managing the phases and tasks of
@@ -21,17 +21,21 @@ public class TaskCoordinator {
      */
     private Phase currentPhase;
 
+    private static final LineFollower lineFollower = new LineFollower();
+    private static final DirectionChanger directionChanger = new DirectionChanger();
+    private static final ObstacleHandler obstacleHandler = new ObstacleHandler();
+
     /**
      * A list of tasks that have been completed.
      */
-    private ArrayList<ProjectTask> completedTasks;
+    // private ArrayList<ProjectTask> completedTasks;
 
     /**
      * Creates a new TaskCoordinator instance with the current phase set to BOOTING.
      */
     public TaskCoordinator() {
         currentPhase = Phase.BOOTING;
-        completedTasks = new ArrayList<>();
+        // completedTasks = new ArrayList<>();
     }
 
     /**
@@ -80,7 +84,7 @@ public class TaskCoordinator {
         // TODO: Handle all Phase cases ...
         switch (currentPhase) {
             default:
-                return new LineFollower();
+                return lineFollower;
         }
     }
 }

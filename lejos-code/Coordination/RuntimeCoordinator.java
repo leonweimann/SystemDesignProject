@@ -149,8 +149,15 @@ public final class RuntimeCoordinator {
      *         {@code false} otherwise.
      */
     private boolean shouldRun() {
-        displayCancelationMessage();
-        return !isCancelationRequested();
+        // displayCancelationMessage();
+        System.out.println("Running...");
+        // return !isCancelationRequested();
+        
+        if (Button.ESCAPE.isDown()) {
+            return false;
+        }
+        
+        return true;
     }
 
     /**
