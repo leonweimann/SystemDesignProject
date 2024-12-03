@@ -39,7 +39,7 @@ public class MotorController {
      */
     private static final int ROBOT_WIDTH = 13; // cm
 
-    private boolean isRotating = false;
+    private Long rotationEndTime;
 
     /**
      * Constructs a MotorController with specified motor ports for left and right
@@ -118,7 +118,6 @@ public class MotorController {
      * Stops both motors immediately and resets their speeds.
      */
     public void stop() {
-        isRotating = false;
         leftMotor.stop();
         rightMotor.stop();
         resetSpeeds();
@@ -131,42 +130,69 @@ public class MotorController {
      *              clockwise, and negative values rotate counterclockwise. The
      *              angle is normalized to the range [0, 360).
      */
+    // public void rotate(int angle) {
+    //     rotateWith(angle, () -> {
+    //     });
+    // }
+
+    // public void rotateWith(int angle, Runnable action) {
+    //     isRotating = true;
+
+    //     final int ROTATION_SPEED = 250; // [Degrees / Second] // Custom speed for rotation TODO: Adjust
+    //     setSpeeds(ROTATION_SPEED);
+
+    //     int normalizedAngle = Math.abs(angle) % 360; // Normalize angle to the range [0, 360)
+
+    //     // Calculate the time needed to rotate the robot by the specified angle
+    //     double travelDistance = (normalizedAngle / 360.0) * ROBOT_WIDTH; // cm
+    //     int rotationTime = calculateRequiredRotationTime(travelDistance, ROTATION_SPEED);
+
+    //     // Determine the direction of rotation based on the sign of the angle
+    //     if (motorsRunning()) { // Don't change motors movement if they are already moving
+    //     } else if (angle < 0) {
+    //         leftMotor.backward();
+    //         rightMotor.forward();
+    //     } else {
+    //         leftMotor.forward();
+    //         rightMotor.backward();
+    //     }
+
+    //     long startTime = System.currentTimeMillis();
+    //     while (System.currentTimeMillis() - startTime < rotationTime && isRotating) {
+    //         // Ensure the action is executed at the correct frequency to prevent excessive
+    //         // CPU usage
+    //         RuntimeCoordinator.executionFrequencyDelay();
+    //         action.run();
+    //     }
+
+    //     stop(); // isRotating is set to false in stop()
+    // }
+
     public void rotate(int angle) {
-        rotateWith(angle, () -> {
-        });
-    }
+        if (rotationEndTime > System.currentTimeMillis()) {
+            rotationEndTime = null;
+            stop();
+        } else if (rotationEndTime == null) {
+            final int ROTATION_SPEED = 250; // [Degrees / Second] // Custom speed for rotation TODO: Adjust
+            setSpeeds(ROTATION_SPEED);
 
-    public void rotateWith(int angle, Runnable action) {
-        isRotating = true;
+            int normalizedAngle = Math.abs(angle) % 360; // Normalize angle to the range [0, 360)
+            // Calculate the time needed to rotate the robot by the specified angle
+            double travelDistance = (normalizedAngle / 360.0) * ROBOT_WIDTH; // cm
+            int rotationTime = calculateRequiredRotationTime(travelDistance, ROTATION_SPEED);
 
-        final int ROTATION_SPEED = 250; // [Degrees / Second] // Custom speed for rotation TODO: Adjust
-        setSpeeds(ROTATION_SPEED);
+            rotationEndTime = System.currentTimeMillis() + rotationTime;
 
-        int normalizedAngle = Math.abs(angle) % 360; // Normalize angle to the range [0, 360)
-
-        // Calculate the time needed to rotate the robot by the specified angle
-        double travelDistance = (normalizedAngle / 360.0) * ROBOT_WIDTH; // cm
-        int rotationTime = calculateRequiredRotationTime(travelDistance, ROTATION_SPEED);
-
-        // Determine the direction of rotation based on the sign of the angle
-        if (motorsRunning()) { // Don't change motors movement if they are already moving
-        } else if (angle < 0) {
-            leftMotor.backward();
-            rightMotor.forward();
-        } else {
-            leftMotor.forward();
-            rightMotor.backward();
+            // Determine the direction of rotation based on the sign of the angle
+            if (motorsRunning()) { // Don't change motors movement if they are already moving
+            } else if (angle < 0) {
+                leftMotor.backward();
+                rightMotor.forward();
+            } else {
+                leftMotor.forward();
+                rightMotor.backward();
+            }
         }
-
-        long startTime = System.currentTimeMillis();
-        while (System.currentTimeMillis() - startTime < rotationTime && isRotating) {
-            // Ensure the action is executed at the correct frequency to prevent excessive
-            // CPU usage
-            RuntimeCoordinator.executionFrequencyDelay();
-            action.run();
-        }
-
-        stop(); // isRotating is set to false in stop()
     }
 
     /**
