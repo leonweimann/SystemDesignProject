@@ -127,7 +127,7 @@ public final class RuntimeCoordinator {
             executeCrutial();
         }
 
-        LCDHelper.display("Execution stopped!", Alignment.CENTER);
+        LCDHelper.display("Execution stopped!", true);
         Delay.msDelay(1000);
     }
 
@@ -136,7 +136,7 @@ public final class RuntimeCoordinator {
      */
     private void executeFrequent() {
         // taskCoordinator.executeTasks();
-        LCDHelper.display("Executing frequent tasks...", Alignment.CENTER);
+        LCDHelper.display("Executing frequent tasks...", true);
     }
 
     /**
@@ -144,7 +144,7 @@ public final class RuntimeCoordinator {
      */
     private void executeCrutial() {
         // Add crucial execution logic here
-        LCDHelper.display("Executing crucial tasks...", Alignment.CENTER);
+        LCDHelper.display("Executing crucial tasks...", true);
     }
 
     /**
