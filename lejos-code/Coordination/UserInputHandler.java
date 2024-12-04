@@ -1,6 +1,7 @@
 package Coordination;
 
 import lejos.nxt.Button;
+import lejos.nxt.LCD;
 
 /**
  * The UserInputHandler class provides utility methods for handling user input
@@ -28,12 +29,13 @@ public final class UserInputHandler {
     }
 
     /**
-     * Waits for the specified button to be pressed and then released before continuing execution.
+     * Waits for the specified button to be pressed and then released before
+     * continuing execution.
      *
      * @param btn the button to wait for
      */
     public static void awaitButtonPress(Button btn, String label) {
-        System.out.println("Press " + label + " to continue ...");
+        LCDHelper.display("Press\n\n" + label + "\n\nto continue ...", true);
         // Wait for button press
         while (!isButtonPressed(btn)) {
             // Do nothing, just wait for the button to be pressed
@@ -42,7 +44,7 @@ public final class UserInputHandler {
         while (isButtonPressed(btn)) {
             // Do nothing, just wait for the button to be released
         }
-        System.out.println("Continuing execution ...");
+        LCDHelper.display("Continuing ...", true);
     }
 
     /**
@@ -50,24 +52,34 @@ public final class UserInputHandler {
      * button for 3 seconds to exit the program.
      */
     public static void awaitContinueOrExit() {
-        System.out.println("Press any button to continue or hold ESCAPE for 3 seconds to exit ...");
-        long escapePressStartTime = 0;
-        while (true) {
+        do {
             if (isButtonPressed(Button.ESCAPE)) {
-                if (escapePressStartTime == 0) {
-                    escapePressStartTime = System.currentTimeMillis();
-                    System.out.println("Hold ESCAPE for 3 seconds to exit...");
-                } else if (System.currentTimeMillis() - escapePressStartTime >= 3000) {
-                    System.out.println("Exiting...");
-                    System.exit(0);
-                }
-            } else {
-                escapePressStartTime = 0;
-                if (Button.readButtons() != 0) {
-                    System.out.println("Continuing execution...");
-                    break;
+                LCDHelper.display("Press any button to continue or hold\nESCAPE\nfor 3 seconds to exit ...", true);
+            }
+        } while (checkForExitSimultaneously());
+        LCD.clear();
+    }
+
+    public static boolean checkForExitSimultaneously() {
+        if (Button.ESCAPE.isDown()) {
+            double lastRemainingTimeRounded = 0.0;
+            long startTime = System.currentTimeMillis();
+            while (Button.ESCAPE.isDown()) {
+                if (System.currentTimeMillis() - startTime >= 3000) {
+                    return false;
+                } else {
+                    double remainingTime = 3 - (System.currentTimeMillis() - startTime) / 1000.0;
+                    double remainingTimeRounded = Math.round(remainingTime * 10) / 10.0;
+
+                    if (remainingTimeRounded != lastRemainingTimeRounded) {
+                        LCDHelper.display("Keep holding ESCAPE for\n \n" + remainingTimeRounded + " seconds", true);
+                        lastRemainingTimeRounded = remainingTimeRounded;
+                    }
                 }
             }
+            LCD.clear();
         }
+
+        return true;
     }
 }
