@@ -120,8 +120,6 @@ public final class RuntimeCoordinator {
                 taskCoordinator.executeFrequent();
             }
 
-            Delay.msDelay(1000);
-
             taskCoordinator.executeCrutial();
         }
 

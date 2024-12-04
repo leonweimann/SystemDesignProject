@@ -1,12 +1,10 @@
 package Controlling;
 
-import Coordination.LCDHelper;
 import Coordination.UserInputHandler;
 import Models.Symbol;
 import lejos.nxt.Button;
 import lejos.nxt.LightSensor;
 import lejos.nxt.SensorPort;
-import lejos.util.Delay;
 
 /**
  * The LightFluctuationController class is responsible for controlling the light
