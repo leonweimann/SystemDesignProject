@@ -10,7 +10,5 @@ public class TaskCoordinator {
 
     public void executeTasks() {
         symbolFetching.run();
-
-        LCDHelper.display("Tasks executing!");
     }
 }

@@ -89,7 +89,6 @@ public final class RuntimeCoordinator {
         System.out.println("Executing setup phase 1...");
         // Add setup phase 1 logic here
 
-        System.out.println("Calibrating light sensors...");
         lightController.calibrateSensors();
         System.out.println("Light sensors calibrated");
     }
@@ -134,8 +133,7 @@ public final class RuntimeCoordinator {
      * Executes tasks that need to run frequently.
      */
     private void executeFrequent() {
-        // taskCoordinator.executeTasks();
-        LCDHelper.display("Executing frequent tasks...", true);
+        taskCoordinator.executeTasks();
     }
 
     /**
@@ -143,7 +141,6 @@ public final class RuntimeCoordinator {
      */
     private void executeCrutial() {
         // Add crucial execution logic here
-        LCDHelper.display("Executing crucial tasks...", true);
     }
 
     /**
