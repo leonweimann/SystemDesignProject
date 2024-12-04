@@ -10,7 +10,7 @@ import lejos.nxt.LCD;
  * handles word wrapping.
  * 
  * @author leonweimann
- * @version 1.1
+ * @version 1.2
  */
 public class LCDHelper {
     /**

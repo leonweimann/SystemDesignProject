@@ -12,7 +12,7 @@ import lejos.util.Delay;
  * user cancellation requests.
  * 
  * @author leonweimann
- * @version 2.1
+ * @version 2.2
  */
 public final class RuntimeCoordinator {
     /**
@@ -24,6 +24,7 @@ public final class RuntimeCoordinator {
      */
     private static final int EXCECUTION_FREQUENCY = 5;
 
+    public TaskCoordinator taskCoordinator;
     public MotorController motorController;
     public TouchController touchController;
     public LightFluctuationController lightController;
@@ -47,6 +48,7 @@ public final class RuntimeCoordinator {
      * Private constructor to initialize the controllers.
      */
     private RuntimeCoordinator() {
+        taskCoordinator = new TaskCoordinator();
         motorController = new MotorController(Ports.MOTOR_LEFT, Ports.MOTOR_RIGHT);
         touchController = new TouchController(Ports.TOUCH_SENSOR);
         lightController = new LightFluctuationController(Ports.LIGHT_SENSOR_LEFT, Ports.LIGHT_SENSOR_RIGHT,
@@ -120,6 +122,8 @@ public final class RuntimeCoordinator {
                 executeFrequent();
             }
 
+            Delay.msDelay(1000);
+
             executeCrutial();
         }
 
@@ -131,7 +135,8 @@ public final class RuntimeCoordinator {
      * Executes tasks that need to run frequently.
      */
     private void executeFrequent() {
-        // Add frequent execution logic here
+        // taskCoordinator.executeTasks();
+        LCDHelper.display("Executing frequent tasks...", true);
     }
 
     /**
@@ -139,6 +144,7 @@ public final class RuntimeCoordinator {
      */
     private void executeCrutial() {
         // Add crucial execution logic here
+        LCDHelper.display("Executing crucial tasks...", true);
     }
 
     /**
