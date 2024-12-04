@@ -46,7 +46,7 @@ public class LCDHelper {
         int height = LCD.DISPLAY_CHAR_DEPTH;
         int lineCount = 0;
 
-        LCD.clear();
+        // LCD.clear();
         StringTokenizer tokenizer = new StringTokenizer(message, "\n");
         while (tokenizer.hasMoreTokens() && lineCount < height) {
             String msgLine = tokenizer.nextToken();

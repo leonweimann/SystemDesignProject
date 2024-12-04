@@ -2,6 +2,7 @@ package Coordination;
 
 import lejos.nxt.Button;
 import lejos.nxt.LCD;
+import lejos.util.Delay;
 
 /**
  * The UserInputHandler class provides utility methods for handling user input
@@ -52,30 +53,44 @@ public final class UserInputHandler {
      * button for 3 seconds to exit the program.
      */
     public static void awaitContinueOrExit() {
-        do {
-            if (isButtonPressed(Button.ESCAPE)) {
-                LCDHelper.display("Press any button to continue or hold\nESCAPE\nfor 3 seconds to exit ...", true);
+        long nextDialogTime = System.currentTimeMillis();
+         while (true) {
+            if (nextDialogTime < System.currentTimeMillis()) {
+                nextDialogTime = System.currentTimeMillis() + 200;
+                LCDHelper.display("Press\nENTER\nto continue or hold\nESCAPE\nfor 3 seconds to exit ...", true);
             }
-        } while (checkForExitSimultaneously());
-        LCD.clear();
+
+            if (isButtonPressed(Button.ENTER)) {
+                LCDHelper.display("Continuing ...", true);
+                break;
+            } else if (!checkForExitSimultaneously()) {
+                LCDHelper.display("Exiting ...", true);
+                Delay.msDelay(1000);
+                System.exit(0);
+            }
+        }
     }
 
     /**
      * Checks if the ESCAPE button is held down for at least 3 seconds.
-     * If the ESCAPE button is held down continuously for 3 seconds, the method returns false.
+     * If the ESCAPE button is held down continuously for 3 seconds, the method
+     * returns false.
      * Otherwise, it returns true.
      *
-     * During the 3-second period, the remaining time is displayed on the LCD screen.
+     * During the 3-second period, the remaining time is displayed on the LCD
+     * screen.
      * The display is updated every 0.1 seconds to show the remaining time.
      *
-     * @return false if the ESCAPE button is held down for 3 seconds, true otherwise.
+     * @return false if the ESCAPE button is held down for 3 seconds, true
+     *         otherwise.
      */
     public static boolean checkForExitSimultaneously() {
-        if (Button.ESCAPE.isDown()) {
+        if (isButtonPressed(Button.ESCAPE)) {
             double lastRemainingTimeRounded = 0.0;
             long startTime = System.currentTimeMillis();
-            while (Button.ESCAPE.isDown()) {
+            while (isButtonPressed(Button.ESCAPE)) {
                 if (System.currentTimeMillis() - startTime >= 3000) {
+                    LCD.clear();
                     return false;
                 } else {
                     double remainingTime = 3 - (System.currentTimeMillis() - startTime) / 1000.0;
