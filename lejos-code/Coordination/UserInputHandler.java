@@ -8,7 +8,7 @@ import lejos.nxt.LCD;
  * through button presses. This class cannot be instantiated.
  * 
  * @author leonweimann
- * @version 1.2
+ * @version 1.3
  */
 public final class UserInputHandler {
     /**
@@ -60,6 +60,16 @@ public final class UserInputHandler {
         LCD.clear();
     }
 
+    /**
+     * Checks if the ESCAPE button is held down for at least 3 seconds.
+     * If the ESCAPE button is held down continuously for 3 seconds, the method returns false.
+     * Otherwise, it returns true.
+     *
+     * During the 3-second period, the remaining time is displayed on the LCD screen.
+     * The display is updated every 0.1 seconds to show the remaining time.
+     *
+     * @return false if the ESCAPE button is held down for 3 seconds, true otherwise.
+     */
     public static boolean checkForExitSimultaneously() {
         if (Button.ESCAPE.isDown()) {
             double lastRemainingTimeRounded = 0.0;

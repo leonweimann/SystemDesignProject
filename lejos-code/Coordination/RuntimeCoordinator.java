@@ -3,8 +3,6 @@ package Coordination;
 import Config.Ports;
 import Controlling.*;
 
-import lejos.nxt.Button;
-import lejos.nxt.LCD;
 import lejos.util.Delay;
 
 /**
@@ -14,7 +12,7 @@ import lejos.util.Delay;
  * user cancellation requests.
  * 
  * @author leonweimann
- * @version 2.0
+ * @version 2.1
  */
 public final class RuntimeCoordinator {
     /**
@@ -32,6 +30,12 @@ public final class RuntimeCoordinator {
 
     private static RuntimeCoordinator instance;
 
+    /**
+     * Returns the singleton instance of the {@code RuntimeCoordinator}.
+     * If the instance is {@code null}, it initializes a new one.
+     * 
+     * @return the singleton instance of {@code RuntimeCoordinator}
+     */
     public static RuntimeCoordinator getInstance() {
         if (instance == null) {
             instance = new RuntimeCoordinator();
@@ -39,6 +43,9 @@ public final class RuntimeCoordinator {
         return instance;
     }
 
+    /**
+     * Private constructor to initialize the controllers.
+     */
     private RuntimeCoordinator() {
         motorController = new MotorController(Ports.MOTOR_LEFT, Ports.MOTOR_RIGHT);
         touchController = new TouchController(Ports.TOUCH_SENSOR);
@@ -46,11 +53,17 @@ public final class RuntimeCoordinator {
                 Ports.LIGHT_SENSOR_CENTER);
     }
 
+    /**
+     * Connects the robot by booting it and starting the execution process.
+     */
     public void connect() {
         boot();
         execute();
     }
 
+    /**
+     * Boots the robot by executing the necessary setup phases.
+     */
     private void boot() {
         System.out.println("Starting robot...");
 
@@ -68,6 +81,9 @@ public final class RuntimeCoordinator {
         System.out.println("> Started");
     }
 
+    /**
+     * Executes the first setup phase, including the calibration of light sensors.
+     */
     private void setupPhase1() {
         System.out.println("Executing setup phase 1...");
         // Add setup phase 1 logic here
@@ -77,16 +93,25 @@ public final class RuntimeCoordinator {
         System.out.println("Light sensors calibrated");
     }
 
+    /**
+     * Executes the second setup phase.
+     */
     private void setupPhase2() {
         System.out.println("Executing setup phase 2...");
         // Add setup phase 2 logic here
     }
 
+    /**
+     * Executes the third setup phase.
+     */
     private void setupPhase3() {
         System.out.println("Executing setup phase 3...");
         // Add setup phase 3 logic here
     }
 
+    /**
+     * Starts the execution loop, running frequent and crucial tasks.
+     */
     private void execute() {
         long nextExecutionTime = 0;
         while (UserInputHandler.checkForExitSimultaneously()) {
@@ -102,14 +127,25 @@ public final class RuntimeCoordinator {
         Delay.msDelay(1000);
     }
 
+    /**
+     * Executes tasks that need to run frequently.
+     */
     private void executeFrequent() {
         // Add frequent execution logic here
     }
 
+    /**
+     * Executes crucial tasks that need to run continuously.
+     */
     private void executeCrutial() {
         // Add crucial execution logic here
     }
 
+    /**
+     * Returns the delay between executions based on the execution frequency.
+     * 
+     * @return the delay in milliseconds
+     */
     public static double getExecutionFrequencyDelay() {
         return 1000 / EXCECUTION_FREQUENCY;
     }
