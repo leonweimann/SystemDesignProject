@@ -2,6 +2,7 @@ package Coordination;
 
 import Config.Ports;
 import Controlling.*;
+import java.util.StringTokenizer;
 
 import lejos.nxt.Button;
 import lejos.nxt.LCD;
@@ -91,15 +92,14 @@ public final class RuntimeCoordinator {
         long nextExecutionTime = -1;
         while (shouldRun()) {
             if (nextExecutionTime < System.currentTimeMillis()) {
-                nextExecutionTime = (long) (System.currentTimeMillis() + getExecutionFrequencyDelay());
-                execute();
+                // nextExecutionTime = (long) (System.currentTimeMillis() + getExecutionFrequencyDelay());
+                // execute();
             }
 
             executeCrutial();
         }
 
-        LCD.clear();
-        LCD.drawString("Execution stopped!", 0, 0);
+        displayOnLCD("Execution stopped!", true);
         Delay.msDelay(1000);
     }
 
@@ -109,20 +109,69 @@ public final class RuntimeCoordinator {
 
     private boolean shouldRun() {
         if (Button.ESCAPE.isDown()) {
+            double lastRemainingTimeRounded = 0.0;
             long startTime = System.currentTimeMillis();
             while (Button.ESCAPE.isDown()) {
                 if (System.currentTimeMillis() - startTime >= 3000) {
                     return false;
                 } else {
-                    double remainingTime = 3 - (System.currentTimeMillis() - startTime) / 1000;
+                    double remainingTime = 3 - (System.currentTimeMillis() - startTime) / 1000.0;
                     double remainingTimeRounded = Math.round(remainingTime * 10) / 10.0;
-                    LCD.clear();
-                    LCD.drawString("Keep holding ESCAPE for " + remainingTimeRounded + " seconds", 0, 0);
+
+                    if (remainingTimeRounded != lastRemainingTimeRounded) {
+                        displayOnLCD("Keep holding ESCAPE for \n" + remainingTimeRounded + "\n seconds", true);
+                        lastRemainingTimeRounded = remainingTimeRounded;
+                    }
                 }
             }
+            LCD.clear();
         }
 
         return true;
+    }
+
+    public void displayOnLCD(String message) {
+        displayOnLCD(message, false);
+    }
+
+    public void displayOnLCD(String message, boolean isCentered) {
+        int width = LCD.DISPLAY_CHAR_WIDTH;
+        int height = LCD.DISPLAY_CHAR_DEPTH;
+        int lineCount = 0;
+
+        LCD.clear();
+        StringTokenizer tokenizer = new StringTokenizer(message, "\n");
+        while (tokenizer.hasMoreTokens() && lineCount < height) {
+            String msgLine = tokenizer.nextToken();
+            while (msgLine.length() > 0 && lineCount < height) {
+                int endIndex = Math.min(width, msgLine.length());
+                String line = msgLine.substring(0, endIndex);
+
+                // Check if the line ends in the middle of a word
+                if (endIndex < msgLine.length() && msgLine.charAt(endIndex) != ' ' && msgLine.charAt(endIndex - 1) != ' ') {
+                    int lastSpace = line.lastIndexOf(' ');
+                    if (lastSpace != -1) {
+                        line = line.substring(0, lastSpace);
+                        endIndex = lastSpace + 1;
+                    }
+                }
+
+                // Center the line if isCentered is true
+                if (isCentered) {
+                    int padding = (width - line.length()) / 2;
+                    StringBuilder paddedLine = new StringBuilder();
+                    for (int i = 0; i < padding; i++) {
+                        paddedLine.append(' ');
+                    }
+                    paddedLine.append(line);
+                    line = paddedLine.toString();
+                }
+
+                LCD.drawString(line, 0, lineCount);
+                msgLine = msgLine.substring(endIndex).trim();
+                lineCount++;
+            }
+        }
     }
 
     public static double getExecutionFrequencyDelay() {

@@ -45,7 +45,7 @@ public class LightFluctuationController {
      */
     public void calibrateSensors() {
         System.out.println("Place all sensors over white surface ...");
-        UserInputHandler.awaitButtonPress(Button.ENTER);
+        UserInputHandler.awaitButtonPress(Button.ENTER, "ENTER");
 
         leftSensor.calibrateHigh();
         rightSensor.calibrateHigh();
@@ -56,7 +56,7 @@ public class LightFluctuationController {
 
         // Place robot over black line
         System.out.println("Place all sensors over black surface ...");
-        UserInputHandler.awaitButtonPress(Button.ENTER);
+        UserInputHandler.awaitButtonPress(Button.ENTER, "ENTER");
 
         leftSensor.calibrateLow();
         rightSensor.calibrateLow();
