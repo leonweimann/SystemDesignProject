@@ -2,7 +2,7 @@ package Coordination;
 
 import Config.Ports;
 import Controlling.*;
-
+import Coordination.LCDHelper.Alignment;
 import lejos.util.Delay;
 
 /**
@@ -127,7 +127,7 @@ public final class RuntimeCoordinator {
             executeCrutial();
         }
 
-        LCDHelper.display("Execution stopped!", true);
+        LCDHelper.display("Execution stopped!", Alignment.CENTER);
         Delay.msDelay(1000);
     }
 
@@ -136,7 +136,7 @@ public final class RuntimeCoordinator {
      */
     private void executeFrequent() {
         // taskCoordinator.executeTasks();
-        LCDHelper.display("Executing frequent tasks...", true);
+        LCDHelper.display("Executing frequent tasks...", Alignment.CENTER);
     }
 
     /**
@@ -144,7 +144,7 @@ public final class RuntimeCoordinator {
      */
     private void executeCrutial() {
         // Add crucial execution logic here
-        LCDHelper.display("Executing crucial tasks...", true);
+        LCDHelper.display("Executing crucial tasks...", Alignment.CENTER);
     }
 
     /**

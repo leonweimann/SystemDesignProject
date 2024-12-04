@@ -1,10 +1,12 @@
 package Controlling;
 
+import Coordination.LCDHelper;
 import Coordination.UserInputHandler;
 import Models.Symbol;
 import lejos.nxt.Button;
 import lejos.nxt.LightSensor;
 import lejos.nxt.SensorPort;
+import lejos.util.Delay;
 
 /**
  * The LightFluctuationController class is responsible for controlling the light
@@ -44,7 +46,8 @@ public class LightFluctuationController {
      * measurements.
      */
     public void calibrateSensors() {
-        System.out.println("Place all sensors over white surface ...");
+        LCDHelper.display("Place all sensors over white surface ...");
+        Delay.msDelay(1000);
         UserInputHandler.awaitButtonPress(Button.ENTER, "ENTER");
 
         leftSensor.calibrateHigh();
@@ -55,7 +58,8 @@ public class LightFluctuationController {
         int whiteCenter = centerSensor.getLightValue();
 
         // Place robot over black line
-        System.out.println("Place all sensors over black surface ...");
+        LCDHelper.display("Place all sensors over black surface ...");
+        Delay.msDelay(1000);
         UserInputHandler.awaitButtonPress(Button.ENTER, "ENTER");
 
         leftSensor.calibrateLow();

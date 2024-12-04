@@ -1,5 +1,6 @@
 package Coordination;
 
+import Coordination.LCDHelper.Alignment;
 import lejos.nxt.Button;
 import lejos.nxt.LCD;
 import lejos.util.Delay;
@@ -9,7 +10,7 @@ import lejos.util.Delay;
  * through button presses. This class cannot be instantiated.
  * 
  * @author leonweimann
- * @version 1.3
+ * @version 1.4
  */
 public final class UserInputHandler {
     /**
@@ -36,7 +37,7 @@ public final class UserInputHandler {
      * @param btn the button to wait for
      */
     public static void awaitButtonPress(Button btn, String label) {
-        LCDHelper.display("Press\n\n" + label + "\n\nto continue ...", true);
+        LCDHelper.display("Press\n\n" + label + "\n\nto continue ...");
         // Wait for button press
         while (!isButtonPressed(btn)) {
             // Do nothing, just wait for the button to be pressed
@@ -45,7 +46,7 @@ public final class UserInputHandler {
         while (isButtonPressed(btn)) {
             // Do nothing, just wait for the button to be released
         }
-        LCDHelper.display("Continuing ...", true);
+        LCDHelper.display("Continuing ...", Alignment.CENTER);
     }
 
     /**
@@ -57,14 +58,14 @@ public final class UserInputHandler {
          while (true) {
             if (nextDialogTime < System.currentTimeMillis()) {
                 nextDialogTime = System.currentTimeMillis() + 200;
-                LCDHelper.display("Press\nENTER\nto continue or hold\nESCAPE\nfor 3 seconds to exit ...", true);
+                LCDHelper.display("Press\nENTER\nto continue or hold\nESCAPE\nfor 3 seconds to exit ...", Alignment.CENTER);
             }
-
+            
             if (isButtonPressed(Button.ENTER)) {
-                LCDHelper.display("Continuing ...", true);
+                LCDHelper.display("Continuing ...", Alignment.CENTER);
                 break;
             } else if (!checkForExitSimultaneously()) {
-                LCDHelper.display("Exiting ...", true);
+                LCDHelper.display("Exiting ...", Alignment.CENTER);
                 Delay.msDelay(1000);
                 System.exit(0);
             }
@@ -97,7 +98,7 @@ public final class UserInputHandler {
                     double remainingTimeRounded = Math.round(remainingTime * 10) / 10.0;
 
                     if (remainingTimeRounded != lastRemainingTimeRounded) {
-                        LCDHelper.display("Keep holding ESCAPE for\n \n" + remainingTimeRounded + " seconds", true);
+                        LCDHelper.display("Keep holding ESCAPE for\n \n" + remainingTimeRounded + " seconds", Alignment.CENTER);
                         lastRemainingTimeRounded = remainingTimeRounded;
                     }
                 }

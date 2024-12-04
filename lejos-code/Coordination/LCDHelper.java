@@ -10,7 +10,7 @@ import lejos.nxt.LCD;
  * handles word wrapping.
  * 
  * @author leonweimann
- * @version 1.2
+ * @version 1.3
  */
 public class LCDHelper {
     /**
@@ -21,6 +21,10 @@ public class LCDHelper {
         // Prevent instantiation
     }
 
+    public enum Alignment {
+        TOP, BOTTOM, LEFT, RIGHT, CENTER
+    }
+
     /**
      * Displays a message on the LCD screen. Handles overflow by wrapping words to
      * the next line.
@@ -29,7 +33,7 @@ public class LCDHelper {
      *                separated by '\n'.
      */
     public static void display(String message) {
-        display(message, false);
+        display(message, true, Alignment.TOP);
     }
 
     /**
@@ -38,16 +42,58 @@ public class LCDHelper {
      *
      * @param message    The message to be displayed. It can contain multiple lines
      *                   separated by '\n'.
-     * @param isCentered If true, each line of the message will be centered on the
-     *                   screen.
+     * @param alignment  The alignment of the text on the screen (top, bottom, left, right, center).
      */
-    public static void display(String message, boolean isCentered) {
+    public static void display(String message, Alignment alignment) {
+        display(message, true, alignment);
+    }
+
+    /**
+     * Displays a message on the LCD screen. Handles overflow by wrapping words to
+     * the next line.
+     *
+     * @param message    The message to be displayed. It can contain multiple lines
+     *                   separated by '\n'.
+     * @param autoClear  If true, the screen will be cleared before displaying the
+     *                   message.
+     */
+    public static void display(String message, boolean autoClear) {
+        display(message, autoClear, null);
+    }
+
+    /**
+     * Displays a message on the LCD screen. Handles overflow by wrapping words to
+     * the next line.
+     *
+     * @param message    The message to be displayed. It can contain multiple lines
+     *                   separated by '\n'.
+     * @param autoClear  If true, the screen will be cleared before displaying the
+     *                   message.
+     * @param alignment  The alignment of the text on the screen (top, bottom, left, right, center).
+     */
+    public static void display(String message, boolean autoClear, Alignment alignment) {
         int width = LCD.DISPLAY_CHAR_WIDTH;
         int height = LCD.DISPLAY_CHAR_DEPTH;
         int lineCount = 0;
 
-        // LCD.clear();
+        if (autoClear) {
+            LCD.clear();
+        }
+
         StringTokenizer tokenizer = new StringTokenizer(message, "\n");
+        int totalLines = tokenizer.countTokens();
+        int startLine = 0;
+
+        // if (alignment == null) {
+        //     alignment = Alignment.LEFT;
+        // }
+
+        if (alignment == Alignment.BOTTOM) {
+            startLine = Math.max(0, height - totalLines);
+        } else if (alignment == Alignment.CENTER) {
+            startLine = Math.max(0, (height - totalLines) / 2);
+        }
+
         while (tokenizer.hasMoreTokens() && lineCount < height) {
             String msgLine = tokenizer.nextToken();
             while (msgLine.length() > 0 && lineCount < height) {
@@ -64,9 +110,17 @@ public class LCDHelper {
                     }
                 }
 
-                // Center the line if isCentered is true
-                if (isCentered) {
+                // Align the line based on the alignment parameter
+                if (alignment == Alignment.CENTER || alignment == Alignment.TOP) {
                     int padding = (width - line.length()) / 2;
+                    StringBuilder paddedLine = new StringBuilder();
+                    for (int i = 0; i < padding; i++) {
+                        paddedLine.append(' ');
+                    }
+                    paddedLine.append(line);
+                    line = paddedLine.toString();
+                } else if (alignment == Alignment.RIGHT) {
+                    int padding = width - line.length();
                     StringBuilder paddedLine = new StringBuilder();
                     for (int i = 0; i < padding; i++) {
                         paddedLine.append(' ');
@@ -75,7 +129,7 @@ public class LCDHelper {
                     line = paddedLine.toString();
                 }
 
-                LCD.drawString(line, 0, lineCount);
+                LCD.drawString(line, 0, startLine + lineCount);
                 msgLine = msgLine.substring(endIndex).trim();
                 lineCount++;
             }
