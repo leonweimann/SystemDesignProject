@@ -2,7 +2,6 @@ package Controlling;
 
 import Coordination.LCDHelper;
 import Coordination.UserInputHandler;
-import Coordination.LCDHelper.Alignment;
 import Models.Symbol;
 import lejos.nxt.Button;
 import lejos.nxt.LightSensor;

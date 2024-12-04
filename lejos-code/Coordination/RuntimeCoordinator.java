@@ -2,7 +2,6 @@ package Coordination;
 
 import Config.Ports;
 import Controlling.*;
-import Coordination.LCDHelper.Alignment;
 import lejos.util.Delay;
 
 /**

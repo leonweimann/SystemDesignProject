@@ -21,10 +21,6 @@ public class LCDHelper {
         // Prevent instantiation
     }
 
-    public enum Alignment {
-        TOP, BOTTOM, LEFT, RIGHT, CENTER
-    }
-
     /**
      * Displays a message on the LCD screen. Handles overflow by wrapping words to
      * the next line.

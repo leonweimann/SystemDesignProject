@@ -1,6 +1,5 @@
 package Coordination;
 
-import Coordination.LCDHelper.Alignment;
 import lejos.nxt.Button;
 import lejos.nxt.LCD;
 import lejos.util.Delay;
