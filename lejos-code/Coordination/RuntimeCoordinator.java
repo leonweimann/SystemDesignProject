@@ -11,7 +11,7 @@ import lejos.util.Delay;
  * user cancellation requests.
  * 
  * @author leonweimann
- * @version 2.2
+ * @version 2.3
  */
 public final class RuntimeCoordinator {
     /**
@@ -117,30 +117,16 @@ public final class RuntimeCoordinator {
         while (UserInputHandler.checkForExitSimultaneously()) {
             if (nextExecutionTime < System.currentTimeMillis()) {
                 nextExecutionTime = (long) (System.currentTimeMillis() + getExecutionFrequencyDelay());
-                executeFrequent();
+                taskCoordinator.executeFrequent();
             }
 
             Delay.msDelay(1000);
 
-            executeCrutial();
+            taskCoordinator.executeCrutial();
         }
 
         LCDHelper.display("Execution stopped!", true);
         Delay.msDelay(1000);
-    }
-
-    /**
-     * Executes tasks that need to run frequently.
-     */
-    private void executeFrequent() {
-        taskCoordinator.executeTasks();
-    }
-
-    /**
-     * Executes crucial tasks that need to run continuously.
-     */
-    private void executeCrutial() {
-        // Add crucial execution logic here
     }
 
     /**

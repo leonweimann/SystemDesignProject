@@ -6,9 +6,14 @@ public class TaskCoordinator {
     public TaskCoordinator() {
     }
 
+    private LineFollower lineFollower = new LineFollower();
     private SymbolFetching symbolFetching = new SymbolFetching();
 
-    public void executeTasks() {
-        symbolFetching.run();
+    public void executeFrequent() {
+        
+    }
+
+    public void executeCrutial() {
+        
     }
 }
