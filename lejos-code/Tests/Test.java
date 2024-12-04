@@ -1,6 +1,5 @@
 package Tests;
 
-import Coordination.RuntimeCoordinator;
 import Coordination.UserInputHandler;
 import lejos.nxt.Button;
 import lejos.nxt.LCD;
@@ -29,12 +28,13 @@ public abstract class Test {
     public void boot() {
         showGreeting();
         setup();
-        while (executionLoop()) {
+        long nextExecutionTime = -1;
+        while (checkExitCondition()) {
             attachMultiTesting();
-            if (checkExitCondition()) {
+            if (System.currentTimeMillis() < nextExecutionTime)
+                continue;
+            if (executionLoop())
                 break;
-            }
-            RuntimeCoordinator.executionFrequencyDelay();
         }
         System.out.println("Test completed.");
         Delay.msDelay(1000);

@@ -53,7 +53,7 @@ public final class UserInputHandler {
         System.out.println("Press any button to continue or hold ESCAPE for 3 seconds to exit ...");
         long escapePressStartTime = 0;
         while (true) {
-            if (Button.ESCAPE.isDown()) {
+            if (isButtonPressed(Button.ESCAPE)) {
                 if (escapePressStartTime == 0) {
                     escapePressStartTime = System.currentTimeMillis();
                     System.out.println("Hold ESCAPE for 3 seconds to exit...");
