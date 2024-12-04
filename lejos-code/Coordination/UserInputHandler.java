@@ -49,7 +49,7 @@ public final class UserInputHandler {
      * @param alignement The alignment of the message on the LCD screen.
      */
     public static void awaitButtonPress(Button btn, String label, String message) {
-        LCDHelper.display("Press\n\n" + label + "\n\nto continue ..." + "\n---\n" + message, true);
+        LCDHelper.display("Press\n\n" + label + "\n\nto continue ..." + "\n \n" + message, true);
         // Wait for button press
         while (!isButtonPressed(btn)) {
             // Do nothing, just wait for the button to be pressed
