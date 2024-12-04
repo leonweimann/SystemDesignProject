@@ -89,11 +89,11 @@ public final class RuntimeCoordinator {
     }
 
     private void execute() {
-        long nextExecutionTime = -1;
+        long nextExecutionTime = 0;
         while (shouldRun()) {
             if (nextExecutionTime < System.currentTimeMillis()) {
-                // nextExecutionTime = (long) (System.currentTimeMillis() + getExecutionFrequencyDelay());
-                // execute();
+                nextExecutionTime = (long) (System.currentTimeMillis() + getExecutionFrequencyDelay());
+                executeFrequent();
             }
 
             executeCrutial();
@@ -101,6 +101,10 @@ public final class RuntimeCoordinator {
 
         displayOnLCD("Execution stopped!", true);
         Delay.msDelay(1000);
+    }
+
+    private void executeFrequent() {
+        // Add frequent execution logic here
     }
 
     private void executeCrutial() {
