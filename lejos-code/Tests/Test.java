@@ -11,7 +11,7 @@ import lejos.util.Delay;
  * for user input to start the test and to either repeat the test or exit.
  * 
  * @author leonweimann
- * @version 1.3
+ * @version 1.4
  */
 public abstract class Test {
     /**
@@ -28,8 +28,12 @@ public abstract class Test {
     public void boot() {
         showGreeting();
         setup();
-        while (executionLoop()) {
-            if (checkExitCondition())
+        long nextExecutionTime = -1;
+        while (checkExitCondition()) {
+            attachMultiTesting();
+            if (System.currentTimeMillis() < nextExecutionTime)
+                continue;
+            if (executionLoop())
                 break;
         }
         System.out.println("Test completed.");
@@ -93,7 +97,7 @@ public abstract class Test {
      * @return true if both LEFT and RIGHT buttons are pressed, false otherwise.
      */
     private boolean exitCondition() {
-        return Button.LEFT.isDown() && Button.RIGHT.isDown();
+        return (Button.LEFT.isDown() && Button.RIGHT.isDown()) || currentTestCount < 0;
     }
 
     /**
@@ -105,11 +109,17 @@ public abstract class Test {
     public void attachMultiTesting() {
         if (Button.LEFT.isDown()) {
             while (Button.LEFT.isDown()) {
+                if (Button.RIGHT.isDown()) {
+                    return;
+                }
             }
             currentTestCount--;
             displayCurrentTestCount();
         } else if (Button.RIGHT.isDown()) {
             while (Button.RIGHT.isDown()) {
+                if (Button.LEFT.isDown()) {
+                    return;
+                }
             }
             currentTestCount++;
             displayCurrentTestCount();

@@ -6,7 +6,7 @@ import Coordination.RuntimeCoordinator;
  * until a user presses a button to stop the program.
  * 
  * @author leonweimann
- * @version 1.9
+ * @version 2.0
  */
 public class Main {
     /**
@@ -22,7 +22,6 @@ public class Main {
      * @param args The command line arguments.
      */
     public static void main(String[] args) {
-        runtime.boot();
-        runtime.execute();
+        runtime.connect();
     }
 }

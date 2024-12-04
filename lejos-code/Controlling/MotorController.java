@@ -26,11 +26,19 @@ public class MotorController {
     private static final int DEFAULT_SPEED = 500;
 
     /**
-     * The distance each wheel travels per full rotation in centimeters.
+     * The distance {@code (cm)} each wheel travels per full rotation in
+     * centimeters.
      */
-    private static final int WHEEL_DIAMETER = 3;
+    private static final int WHEEL_DIAMETER = 3; // cm
 
-    private static final int ROBOT_WIDTH = 13;
+    /**
+     * The width of the robot in centimeters {@code (cm)}.
+     * This constant is used to define the distance between the two wheels of the
+     * robot.
+     */
+    private static final int ROBOT_WIDTH = 13; // cm
+
+    private Long rotationEndTime;
 
     /**
      * Constructs a MotorController with specified motor ports for left and right
@@ -99,10 +107,8 @@ public class MotorController {
         leftMotor.setSpeed(leftSpeed);
         rightMotor.setSpeed(rightSpeed);
 
-        if (!motorsRunning()) {
-            leftMotor.backward();
-            rightMotor.backward();
-        }
+        leftMotor.backward();
+        rightMotor.backward();
     }
 
     /**
@@ -114,34 +120,81 @@ public class MotorController {
         resetSpeeds();
     }
 
-    /**
-     * Rotates the robot by a specified angle.
-     *
-     * @param angle the angle in degrees to rotate the robot. Positive values rotate
-     *              clockwise, and negative values rotate counterclockwise. The
-     *              angle is normalized to the range [0, 360).
-     */
     public void rotate(int angle) {
-        final int ROTATION_SPEED = 250; // [Degrees / Second] // Custom speed for rotation TODO: Adjust
-        setSpeeds(ROTATION_SPEED);
+        if (rotationEndTime == null) {
+            final int ROTATION_SPEED = 250; // [Degrees / Second] // Custom speed for rotation TODO: Adjust
+            setSpeeds(ROTATION_SPEED);
 
-        int normalizedAngle = Math.abs(angle) % 360;  // Normalize angle to the range [0, 360)
-        
-        // Calculate the time needed to rotate the robot by the specified angle
-        double travelDistance = (normalizedAngle / 360.0) * ROBOT_WIDTH;
-        double wheelSpeedPerRotation = ROTATION_SPEED / 360.0;
-        int rotationTime = (int) ((travelDistance / WHEEL_DIAMETER) * wheelSpeedPerRotation * 1000); // Cast to int to ignore decimal part
+            int normalizedAngle = Math.abs(angle) % 360; // Normalize angle to the range [0, 360)
+            // Calculate the time needed to rotate the robot by the specified angle
+            double travelDistance = (normalizedAngle / 360.0) * ROBOT_WIDTH; // cm
+            int rotationTime = calculateRequiredRotationTime(travelDistance, ROTATION_SPEED);
 
-        // Determine the direction of rotation based on the sign of the angle
-        if (angle < 0) {
-            leftMotor.backward();
-            rightMotor.forward();
-        } else {
-            leftMotor.forward();
-            rightMotor.backward();
+            rotationEndTime = System.currentTimeMillis() + rotationTime;
+
+            leftMotor.stop();
+            rightMotor.stop();
+
+            // Determine the direction of rotation based on the sign of the angle
+            if (angle < 0) {
+                leftMotor.backward();
+                rightMotor.forward();
+            } else {
+                leftMotor.forward();
+                rightMotor.backward();
+            }
+        } else if (rotationEndTime > System.currentTimeMillis()) {
+            rotationEndTime = null;
+            stop();
         }
+    }
 
-        Delay.msDelay(rotationTime); // Wait so the robot rotates as long as needed to reach the angle
-        stop(); // Stop rotating
+    public boolean isRotating() {
+        return rotationEndTime != null;
+    }
+
+    /**
+     * Calculates the required rotation time for the robot to travel a specified
+     * distance at a given speed.
+     *
+     * @param distance The distance the robot needs to travel in
+     *                 {@code centimeterss}.
+     * @param speed    The speed at which the robot is traveling in
+     *                 {@code degrees per second}.
+     * @return The time in milliseconds required for the robot to travel the
+     *         specified distance.
+     */
+    private int calculateRequiredRotationTime(double distance, double speed) {
+        return (int) ((distance / WHEEL_DIAMETER) * rotationSpeed(speed) * 1000);
+    }
+
+    /**
+     * Converts the rotational speed of the wheel from {@code degrees per second} to
+     * {@code rotations per second}.
+     *
+     * @param speed The speed of the wheel in degrees per second.
+     * @return The speed of the wheel in rotations per second.
+     */
+    private double rotationSpeed(double speed) {
+        return speed / 360;
+    }
+
+    /**
+     * Moves the robot backward for a predefined distance.
+     * The method calculates the required rotation time based on the
+     * BACK_OFF_DISTANCE and DEFAULT_SPEED, sets the motor speeds,
+     * and then moves both motors forward for the calculated delay.
+     * After the delay, the motors are stopped.
+     */
+    public void backOff() {
+        final int BACK_OFF_DISTANCE = 5;
+        final int delay = calculateRequiredRotationTime(BACK_OFF_DISTANCE, DEFAULT_SPEED);
+        setSpeeds(DEFAULT_SPEED);
+
+        leftMotor.forward();
+        rightMotor.forward();
+
+        Delay.msDelay(delay);
+        stop();
     }
 }

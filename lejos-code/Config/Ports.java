@@ -31,6 +31,11 @@ public final class Ports {
     public static final SensorPort LIGHT_SENSOR_RIGHT = SensorPort.S1;
 
     /**
+     * Port for the center light sensor, used for line detection in the center of the robot.
+     */
+    public static final SensorPort LIGHT_SENSOR_CENTER = SensorPort.S3;
+
+    /**
      * Port for the touch sensor, used to detect physical contact or obstacles.
      */
     public static final SensorPort TOUCH_SENSOR = SensorPort.S2;
