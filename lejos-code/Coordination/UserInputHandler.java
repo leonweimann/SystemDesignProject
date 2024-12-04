@@ -37,7 +37,7 @@ public final class UserInputHandler {
      * @param label the label to display while waiting
      */
     public static void awaitButtonPress(Button btn, String label) {
-        awaitButtonPress(btn, label, true, null);
+        awaitButtonPress(btn, label, null);
     }
 
     /**
@@ -49,8 +49,8 @@ public final class UserInputHandler {
      * @param clearLCD If true, clears the LCD screen before displaying the message.
      * @param alignement The alignment of the message on the LCD screen.
      */
-    public static void awaitButtonPress(Button btn, String label, boolean clearLCD, Alignment alignement) {
-        LCDHelper.display("Press\n\n" + label + "\n\nto continue ...", clearLCD, alignement);
+    public static void awaitButtonPress(Button btn, String label, String message) {
+        LCDHelper.display("Press\n\n" + label + "\n\nto continue ..." + "\n\n" + message);
         // Wait for button press
         while (!isButtonPressed(btn)) {
             // Do nothing, just wait for the button to be pressed
@@ -59,7 +59,7 @@ public final class UserInputHandler {
         while (isButtonPressed(btn)) {
             // Do nothing, just wait for the button to be released
         }
-        LCDHelper.display("Continuing ...", Alignment.CENTER);
+        LCDHelper.display("Continuing ...", true);
     }
 
     /**
@@ -71,14 +71,14 @@ public final class UserInputHandler {
          while (true) {
             if (nextDialogTime < System.currentTimeMillis()) {
                 nextDialogTime = System.currentTimeMillis() + 200;
-                LCDHelper.display("Press\nENTER\nto continue or hold\nESCAPE\nfor 3 seconds to exit ...", Alignment.CENTER);
+                LCDHelper.display("Press\nENTER\nto continue or hold\nESCAPE\nfor 3 seconds to exit ...", true);
             }
             
             if (isButtonPressed(Button.ENTER)) {
-                LCDHelper.display("Continuing ...", Alignment.CENTER);
+                LCDHelper.display("Continuing ...", true);
                 break;
             } else if (!checkForExitSimultaneously()) {
-                LCDHelper.display("Exiting ...", Alignment.CENTER);
+                LCDHelper.display("Exiting ...", true);
                 Delay.msDelay(1000);
                 System.exit(0);
             }
@@ -111,7 +111,7 @@ public final class UserInputHandler {
                     double remainingTimeRounded = Math.round(remainingTime * 10) / 10.0;
 
                     if (remainingTimeRounded != lastRemainingTimeRounded) {
-                        LCDHelper.display("Keep holding ESCAPE for\n \n" + remainingTimeRounded + " seconds", Alignment.CENTER);
+                        LCDHelper.display("Keep holding ESCAPE for\n \n" + remainingTimeRounded + " seconds", true);
                         lastRemainingTimeRounded = remainingTimeRounded;
                     }
                 }
