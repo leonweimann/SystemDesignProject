@@ -2,7 +2,24 @@ package Tasks;
 
 import Coordination.RuntimeCoordinator;
 
-public interface Task {
+public abstract class Task {
     public RuntimeCoordinator runtime = RuntimeCoordinator.getInstance();
-    public void run();
+
+    private boolean execute = true;
+
+    public void run() {
+        if (execute) {
+            main();
+        }
+    }
+    
+    public abstract void main();
+
+    public void start() {
+        execute = true;
+    }
+
+    public void terminate() {
+        execute = false;
+    }
 }
