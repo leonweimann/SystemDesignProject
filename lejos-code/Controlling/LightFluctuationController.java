@@ -2,6 +2,7 @@ package Controlling;
 
 import Coordination.LCDHelper;
 import Coordination.UserInputHandler;
+import Coordination.LCDHelper.Alignment;
 import Models.Symbol;
 import lejos.nxt.Button;
 import lejos.nxt.LightSensor;
@@ -46,9 +47,9 @@ public class LightFluctuationController {
      * measurements.
      */
     public void calibrateSensors() {
-        LCDHelper.display("Place all sensors over white surface ...");
-        Delay.msDelay(1000);
-        UserInputHandler.awaitButtonPress(Button.ENTER, "ENTER");
+        LCDHelper.display("Place all sensors over white surface ...", false, Alignment.TOP);
+        // Delay.msDelay(1000);
+        UserInputHandler.awaitButtonPress(Button.ENTER, "ENTER", false, Alignment.BOTTOM);
 
         leftSensor.calibrateHigh();
         rightSensor.calibrateHigh();

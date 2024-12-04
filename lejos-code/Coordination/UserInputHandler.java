@@ -31,13 +31,26 @@ public final class UserInputHandler {
     }
 
     /**
-     * Waits for the specified button to be pressed and then released before
-     * continuing execution.
+     * Waits for the specified button to be pressed.
      *
-     * @param btn the button to wait for
+     * @param btn   the button to wait for
+     * @param label the label to display while waiting
      */
     public static void awaitButtonPress(Button btn, String label) {
-        LCDHelper.display("Press\n\n" + label + "\n\nto continue ...");
+        awaitButtonPress(btn, label, true, null);
+    }
+
+    /**
+     * Waits for a specific button to be pressed and then released.
+     * Displays a message on the LCD screen instructing the user to press the button.
+     * 
+     * @param btn The button to wait for.
+     * @param label The label to display on the LCD screen.
+     * @param clearLCD If true, clears the LCD screen before displaying the message.
+     * @param alignement The alignment of the message on the LCD screen.
+     */
+    public static void awaitButtonPress(Button btn, String label, boolean clearLCD, Alignment alignement) {
+        LCDHelper.display("Press\n\n" + label + "\n\nto continue ...", clearLCD, alignement);
         // Wait for button press
         while (!isButtonPressed(btn)) {
             // Do nothing, just wait for the button to be pressed
