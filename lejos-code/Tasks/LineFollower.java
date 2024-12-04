@@ -4,7 +4,7 @@ import Models.Direction;
 import Models.Symbol;
 
 public class LineFollower extends Task {
-    private static final int STEERING_STEP = 5;
+    private static final int STEERING_STEP = 10;
 
     private int steeringAngle = 0;
     private boolean onRoute = false;
