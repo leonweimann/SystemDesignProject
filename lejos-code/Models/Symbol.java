@@ -69,6 +69,6 @@ public class Symbol {
      * @return a string representation of this Symbol
      */
     public String debugDescription() {
-        return "L: " + isLeftBlack + "\n, R: " + isRightBlack + "\n, C: " + isCenterBlack;
+        return "L: " + isLeftBlack + "\nR: " + isRightBlack + "\nC: " + isCenterBlack;
     }
 }
