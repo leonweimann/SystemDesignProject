@@ -45,11 +45,16 @@ public final class UserInputHandler {
      * 
      * @param btn The button to wait for.
      * @param label The label to display on the LCD screen.
-     * @param clearLCD If true, clears the LCD screen before displaying the message.
-     * @param alignement The alignment of the message on the LCD screen.
+     * @param message The message to display on the LCD screen.
      */
     public static void awaitButtonPress(Button btn, String label, String message) {
-        LCDHelper.display("Press\n\n" + label + "\n\nto continue ..." + "\n \n" + message, true);
+        awaitButtonPress(btn, label, message, true);
+    }
+
+    public static void awaitButtonPress(Button btn, String label, String message, boolean displayAnything) {
+        if (displayAnything) {
+            LCDHelper.display("Press\n\n" + label + "\n\nto continue ..." + "\n \n" + message, true);
+        }
         // Wait for button press
         while (!isButtonPressed(btn)) {
             // Do nothing, just wait for the button to be pressed
@@ -58,7 +63,9 @@ public final class UserInputHandler {
         while (isButtonPressed(btn)) {
             // Do nothing, just wait for the button to be released
         }
-        LCDHelper.display("Continuing ...", true);
+        if (displayAnything) {
+            LCDHelper.display("Continuing ...", true);
+        }
     }
 
     /**
@@ -74,6 +81,8 @@ public final class UserInputHandler {
             }
             
             if (isButtonPressed(Button.ENTER)) {
+                while(isButtonPressed(Button.ENTER)) {
+                }
                 LCDHelper.display("Continuing ...", true);
                 break;
             } else if (!checkForExitSimultaneously()) {

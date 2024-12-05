@@ -1,5 +1,6 @@
 package Controlling;
 
+import Coordination.LCDHelper;
 import Coordination.UserInputHandler;
 import Models.Symbol;
 import lejos.nxt.Button;
@@ -9,7 +10,8 @@ import lejos.nxt.SensorPort;
 /**
  * The LightFluctuationController class is responsible for controlling the light
  * sensors and detecting black lines on the ground. The class uses Exponential
- * Moving Average (EMA) to update the thresholds for black detection and performs
+ * Moving Average (EMA) to update the thresholds for black detection and
+ * performs
  * a differential comparison to enhance accuracy. The class also maintains a
  * symbol buffer to store the last few symbols detected by the sensors.
  * 
@@ -83,36 +85,7 @@ public class LightFluctuationController {
         int leftReading = leftSensor.getLightValue();
         int rightReading = rightSensor.getLightValue();
         int centerReading = centerSensor.getLightValue();
-
-        // Update thresholds using EMA
-        leftThreshold = ALPHA * leftReading + (1 - ALPHA) * leftThreshold;
-        rightThreshold = ALPHA * rightReading + (1 - ALPHA) * rightThreshold;
-        centerThreshold = ALPHA * centerReading + (1 - ALPHA) * centerThreshold;
-
-        // Determine black or white
-        boolean isLeftBlack = leftReading < leftThreshold;
-        boolean isRightBlack = rightReading < rightThreshold;
-        boolean isCenterBlack = centerReading < centerThreshold;
-
-        // Differential comparison
-        int leftRightDifference = leftReading - rightReading;
-        int centerLeftDifference = centerReading - leftReading;
-        int centerRightDifference = centerReading - rightReading;
-
-        if (Math.abs(leftRightDifference) > DIFFERENCE_THRESHOLD) {
-            isLeftBlack = leftRightDifference < 0;
-            isRightBlack = leftRightDifference > 0;
-        }
-
-        if (Math.abs(centerLeftDifference) > DIFFERENCE_THRESHOLD) {
-            isCenterBlack = centerLeftDifference < 0;
-        }
-
-        if (Math.abs(centerRightDifference) > DIFFERENCE_THRESHOLD) {
-            isCenterBlack = centerRightDifference < 0;
-        }
-
-        return new Symbol(isLeftBlack, isRightBlack, isCenterBlack);
+        return createSymbol(leftReading, rightReading, centerReading);
     }
 
     /**
@@ -195,5 +168,37 @@ public class LightFluctuationController {
      */
     public Symbol[] currentSymbol() {
         return symbolBuffer;
+    }
+
+    public Symbol createSymbol(int leftReading, int rightReading, int centerReading) {
+        // Update thresholds using EMA
+        leftThreshold = ALPHA * leftReading + (1 - ALPHA) * leftThreshold;
+        rightThreshold = ALPHA * rightReading + (1 - ALPHA) * rightThreshold;
+        centerThreshold = ALPHA * centerReading + (1 - ALPHA) * centerThreshold;
+
+        // Determine black or white
+        boolean isLeftBlack = leftReading < leftThreshold;
+        boolean isRightBlack = rightReading < rightThreshold;
+        boolean isCenterBlack = centerReading < centerThreshold;
+
+        // Differential comparison
+        // int leftRightDifference = leftReading - rightReading;
+        // int centerLeftDifference = centerReading - leftReading;
+        // int centerRightDifference = centerReading - rightReading;
+
+        // if (Math.abs(leftRightDifference) > DIFFERENCE_THRESHOLD) {
+        //     isLeftBlack = leftRightDifference < 0;
+        //     isRightBlack = leftRightDifference > 0;
+        // }
+
+        // if (Math.abs(centerLeftDifference) > DIFFERENCE_THRESHOLD) {
+        //     isCenterBlack = centerLeftDifference < 0;
+        // }
+
+        // if (Math.abs(centerRightDifference) > DIFFERENCE_THRESHOLD) {
+        //     isCenterBlack = centerRightDifference < 0;
+        // }
+
+        return new Symbol(isLeftBlack, isRightBlack, isCenterBlack);
     }
 }

@@ -29,11 +29,11 @@ public abstract class Test {
         showGreeting();
         setup();
         long nextExecutionTime = -1;
-        while (checkExitCondition()) {
+        while (!checkExitCondition()) {
             attachMultiTesting();
             if (System.currentTimeMillis() < nextExecutionTime)
                 continue;
-            if (executionLoop())
+            if (!executionLoop())
                 break;
         }
         System.out.println("Test completed.");
