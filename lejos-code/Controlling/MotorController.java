@@ -23,7 +23,7 @@ public class MotorController {
      * The default speed for the motor controller.
      * This value is used when no other speed is specified.
      */
-    private static final int DEFAULT_SPEED = 500;
+    private static final int DEFAULT_SPEED = 200; // TODO: Reset to 500 after line follower development
 
     /**
      * The distance {@code (cm)} each wheel travels per full rotation in
