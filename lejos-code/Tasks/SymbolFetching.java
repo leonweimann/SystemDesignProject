@@ -1,12 +1,17 @@
 package Tasks;
 
 import Coordination.LCDHelper;
+import Coordination.RuntimeCoordinator;
 import Models.Symbol;
 
-public class SymbolFetching implements Task {
+public class SymbolFetching extends Task {
+    public SymbolFetching(RuntimeCoordinator runtime) {
+        super(runtime);
+    }
+
     @Override
-    public void run() {
+    public void main() {
         Symbol symbol = runtime.lightController.readSymbol();
-        LCDHelper.display(symbol.debugDescription());
+        LCDHelper.appendingToDisplay(symbol.debugDescription(), false, 1);
     }
 }

@@ -1,6 +1,8 @@
 package Coordination;
 
 import java.util.StringTokenizer;
+import java.util.HashSet;
+import java.util.Set;
 
 import lejos.nxt.LCD;
 
@@ -10,7 +12,7 @@ import lejos.nxt.LCD;
  * handles word wrapping.
  * 
  * @author leonweimann
- * @version 1.3
+ * @version 1.5
  */
 public class LCDHelper {
     /**
@@ -20,6 +22,13 @@ public class LCDHelper {
     private LCDHelper() {
         // Prevent instantiation
     }
+
+    /**
+     * A static variable to hold the current string displayed or processed by the
+     * LCDHelper.
+     */
+    private static String currentString = "";
+    private static Set<Integer> appendedItems = new HashSet<>();
 
     /**
      * Displays a message on the LCD screen. Handles overflow by wrapping words to
@@ -46,7 +55,7 @@ public class LCDHelper {
         int height = LCD.DISPLAY_CHAR_DEPTH;
         int lineCount = 0;
 
-        LCD.clear();
+        clear();
         StringTokenizer tokenizer = new StringTokenizer(message, "\n");
         while (tokenizer.hasMoreTokens() && lineCount < height) {
             String msgLine = tokenizer.nextToken();
@@ -80,5 +89,46 @@ public class LCDHelper {
                 lineCount++;
             }
         }
+    }
+
+    /**
+     * Appends a message to the current display string and updates the display.
+     *
+     * @param message the message to be added to the display
+     * @param center  if true, the message will be centered on the display
+     * @param itemNumber the item number to be appended
+     */
+    public static void appendingToDisplay(String message, boolean center, int itemNumber) {
+        if (!isAllowedToAppend() || appendedItems.contains(itemNumber)) {
+            return;
+        }
+
+        appendedItems.add(itemNumber);
+        String newMessage = currentString + "\n" + message;
+        display(newMessage, center);
+        currentString = newMessage;
+    }
+
+    public static void resetAppendedItems() {
+        appendedItems.clear();
+        clear();
+    }
+
+    /**
+     * Checks if the current string is allowed to be appended.
+     *
+     * @return true if the current string is not empty, false otherwise.
+     */
+    private static boolean isAllowedToAppend() {
+        return currentString != "";
+    }
+
+    /**
+     * Clears the LCD display.
+     * This method calls the LCD.clear() method to clear the display.
+     */
+    public static void clear() {
+        LCD.clear();
+        currentString = "";
     }
 }

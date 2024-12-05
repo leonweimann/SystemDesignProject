@@ -11,7 +11,7 @@ import lejos.util.Delay;
  * user cancellation requests.
  * 
  * @author leonweimann
- * @version 2.2
+ * @version 2.3
  */
 public final class RuntimeCoordinator {
     /**
@@ -36,7 +36,7 @@ public final class RuntimeCoordinator {
      * 
      * @return the singleton instance of {@code RuntimeCoordinator}
      */
-    public static RuntimeCoordinator getInstance() {
+    public static RuntimeCoordinator getInstance() { // TODO: Remove Singleton pattern ...
         if (instance == null) {
             instance = new RuntimeCoordinator();
         }
@@ -47,7 +47,7 @@ public final class RuntimeCoordinator {
      * Private constructor to initialize the controllers.
      */
     private RuntimeCoordinator() {
-        taskCoordinator = new TaskCoordinator();
+        taskCoordinator = new TaskCoordinator(this);
         motorController = new MotorController(Ports.MOTOR_LEFT, Ports.MOTOR_RIGHT);
         touchController = new TouchController(Ports.TOUCH_SENSOR);
         lightController = new LightFluctuationController(Ports.LIGHT_SENSOR_LEFT, Ports.LIGHT_SENSOR_RIGHT,
@@ -89,7 +89,6 @@ public final class RuntimeCoordinator {
         System.out.println("Executing setup phase 1...");
         // Add setup phase 1 logic here
 
-        System.out.println("Calibrating light sensors...");
         lightController.calibrateSensors();
         System.out.println("Light sensors calibrated");
     }
@@ -118,32 +117,14 @@ public final class RuntimeCoordinator {
         while (UserInputHandler.checkForExitSimultaneously()) {
             if (nextExecutionTime < System.currentTimeMillis()) {
                 nextExecutionTime = (long) (System.currentTimeMillis() + getExecutionFrequencyDelay());
-                executeFrequent();
+                taskCoordinator.executeFrequent();
             }
 
-            Delay.msDelay(1000);
-
-            executeCrutial();
+            taskCoordinator.executeCrutial();
         }
 
         LCDHelper.display("Execution stopped!", true);
         Delay.msDelay(1000);
-    }
-
-    /**
-     * Executes tasks that need to run frequently.
-     */
-    private void executeFrequent() {
-        // taskCoordinator.executeTasks();
-        LCDHelper.display("Executing frequent tasks...", true);
-    }
-
-    /**
-     * Executes crucial tasks that need to run continuously.
-     */
-    private void executeCrutial() {
-        // Add crucial execution logic here
-        LCDHelper.display("Executing crucial tasks...", true);
     }
 
     /**
