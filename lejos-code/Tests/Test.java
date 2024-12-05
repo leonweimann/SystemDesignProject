@@ -1,5 +1,7 @@
 package Tests;
 
+import Coordination.LCDHelper;
+import Coordination.RuntimeCoordinator;
 import Coordination.UserInputHandler;
 import lejos.nxt.Button;
 import lejos.nxt.LCD;
@@ -28,14 +30,17 @@ public abstract class Test {
     public void boot() {
         showGreeting();
         setup();
-        long nextExecutionTime = -1;
-        while (!checkExitCondition()) {
-            attachMultiTesting();
-            if (System.currentTimeMillis() < nextExecutionTime)
-                continue;
-            if (!executionLoop())
-                break;
+        long nextExecutionTime = 0;
+        while (UserInputHandler.checkForExitSimultaneously()) {
+            if (nextExecutionTime < System.currentTimeMillis()) {
+                LCDHelper.resetAppendedItems();
+                nextExecutionTime = (long) (System.currentTimeMillis() + RuntimeCoordinator.getExecutionFrequencyDelay());
+                if (!executionLoop()) {
+                    break;
+                }
+            }
         }
+        
         System.out.println("Test completed.");
         Delay.msDelay(1000);
     }
@@ -67,40 +72,6 @@ public abstract class Test {
     protected abstract boolean executionLoop();
 
     /**
-     * Checks if the exit condition is met and waits for 5 seconds to confirm the
-     * exit.
-     * 
-     * This method prints a message instructing the user to hold the left and right
-     * buttons for 5 seconds to exit. It then waits for 5 seconds while continuously
-     * checking the exit condition. If the exit condition is still met after 5
-     * seconds, it prints an exit message and returns true, indicating that the exit
-     * condition has been confirmed.
-     * 
-     * @return true if the exit condition is confirmed after 5 seconds, false
-     *         otherwise.
-     */
-    private boolean checkExitCondition() {
-        if (exitCondition()) {
-            long startTime = System.currentTimeMillis();
-            while (exitCondition()) {
-                if (System.currentTimeMillis() - startTime > 5000) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Checks if both the LEFT and RIGHT buttons are pressed down.
-     *
-     * @return true if both LEFT and RIGHT buttons are pressed, false otherwise.
-     */
-    private boolean exitCondition() {
-        return (Button.LEFT.isDown() && Button.RIGHT.isDown()) || currentTestCount < 0;
-    }
-
-    /**
      * Adjusts the current test count based on button presses.
      * If the LEFT button is pressed, the current test count is decremented.
      * If the RIGHT button is pressed, the current test count is incremented.
@@ -109,17 +80,11 @@ public abstract class Test {
     public void attachMultiTesting() {
         if (Button.LEFT.isDown()) {
             while (Button.LEFT.isDown()) {
-                if (Button.RIGHT.isDown()) {
-                    return;
-                }
             }
             currentTestCount--;
             displayCurrentTestCount();
         } else if (Button.RIGHT.isDown()) {
             while (Button.RIGHT.isDown()) {
-                if (Button.LEFT.isDown()) {
-                    return;
-                }
             }
             currentTestCount++;
             displayCurrentTestCount();
@@ -131,7 +96,6 @@ public abstract class Test {
      * Clears the LCD screen before displaying the test count.
      */
     private void displayCurrentTestCount() {
-        LCD.clear();
-        LCD.drawString("Test count: " + currentTestCount, 0, 0);
+        LCDHelper.appendingToDisplay("Test count: " + currentTestCount, true, 0);
     }
 }

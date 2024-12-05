@@ -50,10 +50,10 @@ public final class Ports {
     /**
      * Port for the left motor, used to control the left wheel of the robot.
      */
-    public static final MotorPort MOTOR_LEFT = MotorPort.B;
+    public static final MotorPort MOTOR_LEFT = MotorPort.C;
 
     /**
      * Port for the right motor, used to control the right wheel of the robot.
      */
-    public static final MotorPort MOTOR_RIGHT = MotorPort.C;
+    public static final MotorPort MOTOR_RIGHT = MotorPort.B;
 }

@@ -187,6 +187,7 @@ public class MotorController {
      * After the delay, the motors are stopped.
      */
     public void backOff() {
+        stop();
         final int BACK_OFF_DISTANCE = 5;
         final int delay = calculateRequiredRotationTime(BACK_OFF_DISTANCE, DEFAULT_SPEED);
         setSpeeds(DEFAULT_SPEED);
