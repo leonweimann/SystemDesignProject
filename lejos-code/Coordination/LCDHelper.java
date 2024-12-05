@@ -10,7 +10,7 @@ import lejos.nxt.LCD;
  * handles word wrapping.
  * 
  * @author leonweimann
- * @version 1.3
+ * @version 1.4
  */
 public class LCDHelper {
     /**
@@ -20,6 +20,11 @@ public class LCDHelper {
     private LCDHelper() {
         // Prevent instantiation
     }
+
+    /**
+     * A static variable to hold the current string displayed or processed by the LCDHelper.
+     */
+    private static String currentString = "";
 
     /**
      * Displays a message on the LCD screen. Handles overflow by wrapping words to
@@ -46,7 +51,7 @@ public class LCDHelper {
         int height = LCD.DISPLAY_CHAR_DEPTH;
         int lineCount = 0;
 
-        LCD.clear();
+        clear();
         StringTokenizer tokenizer = new StringTokenizer(message, "\n");
         while (tokenizer.hasMoreTokens() && lineCount < height) {
             String msgLine = tokenizer.nextToken();
@@ -80,5 +85,35 @@ public class LCDHelper {
                 lineCount++;
             }
         }
+    }
+
+    /**
+     * Adds a message to the display.
+     *
+     * @param message the message to be displayed
+     */
+    public static void addToDisplay(String message) {
+        addToDisplay(message, false);
+    }
+
+    /**
+     * Adds a message to the current display string and updates the display.
+     *
+     * @param message the message to be added to the display
+     * @param center  if true, the message will be centered on the display
+     */
+    public static void addToDisplay(String message, boolean center) {
+        String newMessage = currentString + "\n" + message;
+        display(newMessage, center);
+    }
+
+    /**
+     * Clears the LCD display and resets the current string.
+     * This method calls the LCD.clear() method to clear the display
+     * and sets the currentString variable to an empty string.
+     */
+    public static void clear() {
+        LCD.clear();
+        currentString = "";
     }
 }
