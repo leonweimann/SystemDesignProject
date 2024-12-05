@@ -24,6 +24,7 @@ public class MotorController {
      * This value is used when no other speed is specified.
      */
     private static final int DEFAULT_SPEED = 200; // TODO: Reset to 500 after line follower development
+    private int baseSpeed = DEFAULT_SPEED;
 
     /**
      * The distance {@code (cm)} each wheel travels per full rotation in
@@ -61,6 +62,14 @@ public class MotorController {
         return leftMotor.isMoving() || rightMotor.isMoving();
     }
 
+    public void setBaseSpeed(int speed) {
+        baseSpeed = speed;
+    }
+
+    public void resetBaseSpeed() {
+        baseSpeed = DEFAULT_SPEED;
+    }
+
     /**
      * Sets the speed for both motors.
      * 
@@ -75,6 +84,7 @@ public class MotorController {
      * Resets the speeds of both motors to the default speed.
      */
     public void resetSpeeds() {
+        baseSpeed = DEFAULT_SPEED;
         leftMotor.setSpeed(DEFAULT_SPEED);
         rightMotor.setSpeed(DEFAULT_SPEED);
     }
@@ -94,14 +104,14 @@ public class MotorController {
         angle = Math.max(-90, Math.min(90, angle));
 
         if (angle < 0) { // Turn left
-            leftSpeed = (int) (DEFAULT_SPEED * (1.0 + angle / 100.0));
-            rightSpeed = DEFAULT_SPEED;
+            leftSpeed = (int) (baseSpeed * (1.0 + angle / 100.0));
+            rightSpeed = baseSpeed;
         } else if (angle > 0) { // Turn right
-            leftSpeed = DEFAULT_SPEED;
-            rightSpeed = (int) (DEFAULT_SPEED * (1.0 - angle / 100.0));
+            leftSpeed = baseSpeed;
+            rightSpeed = (int) (baseSpeed * (1.0 - angle / 100.0));
         } else { // Move straight
-            leftSpeed = DEFAULT_SPEED;
-            rightSpeed = DEFAULT_SPEED;
+            leftSpeed = baseSpeed;
+            rightSpeed = baseSpeed;
         }
 
         leftMotor.setSpeed(leftSpeed);

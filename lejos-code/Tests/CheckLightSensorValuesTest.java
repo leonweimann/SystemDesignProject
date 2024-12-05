@@ -2,35 +2,40 @@ package Tests;
 
 import Config.Ports;
 import Coordination.LCDHelper;
-import Coordination.UserInputHandler;
-import lejos.nxt.Button;
+import Coordination.RuntimeCoordinator;
+// import Coordination.UserInputHandler;
 import lejos.nxt.LightSensor;
-import lejos.nxt.NXTRegulatedMotor;
+// import lejos.nxt.NXTRegulatedMotor;
 
 public class CheckLightSensorValuesTest extends Test {
-    LightSensor left = new LightSensor(Ports.LIGHT_SENSOR_LEFT);
-    LightSensor right = new LightSensor(Ports.LIGHT_SENSOR_RIGHT);
-    LightSensor center = new LightSensor(Ports.LIGHT_SENSOR_CENTER);
+    private RuntimeCoordinator runtime = RuntimeCoordinator.getInstance();
 
-    NXTRegulatedMotor mLeft = new NXTRegulatedMotor(Ports.MOTOR_LEFT);
-    NXTRegulatedMotor mRight = new NXTRegulatedMotor(Ports.MOTOR_RIGHT);
+    private LightSensor left = new LightSensor(Ports.LIGHT_SENSOR_LEFT);
+    private LightSensor right = new LightSensor(Ports.LIGHT_SENSOR_RIGHT);
+    private LightSensor center = new LightSensor(Ports.LIGHT_SENSOR_CENTER);
+
+    // private NXTRegulatedMotor mLeft = new NXTRegulatedMotor(Ports.MOTOR_LEFT);
+    // private NXTRegulatedMotor mRight = new NXTRegulatedMotor(Ports.MOTOR_RIGHT);
+
+    private int steeringAngle = 0;
+    private static final int STEERING_STEP = 20;
 
     @Override
     protected void setup() {
-        mLeft.setSpeed(200);
-        mRight.setSpeed(200);
+        // mLeft.setSpeed(200);
+        // mRight.setSpeed(200);
         
-        UserInputHandler.awaitButtonPress(Button.ENTER, "ENTER", "White calibration");
+        // UserInputHandler.awaitButtonPress(Button.ENTER, "ENTER", "White calibration");
 
-        left.calibrateHigh();
-        right.calibrateHigh();
-        center.calibrateHigh();
+        // left.calibrateHigh();
+        // right.calibrateHigh();
+        // center.calibrateHigh();
 
-        UserInputHandler.awaitButtonPress(Button.ENTER, "ENTER", "Black calibration");
+        // UserInputHandler.awaitButtonPress(Button.ENTER, "ENTER", "Black calibration");
 
-        left.calibrateLow();
-        right.calibrateLow();
-        center.calibrateLow();
+        // left.calibrateLow();
+        // right.calibrateLow();
+        // center.calibrateLow();
     }
 
     @Override
@@ -41,38 +46,19 @@ public class CheckLightSensorValuesTest extends Test {
 
         if (leftReading < rightReading && leftReading < centerReading) {
             LCDHelper.appendingToDisplay("Turn Left", false, 1);
-            // steeringAngle = Math.min(steeringAngle + STEERING_STEP, 100);
-            // steeringAngle = 100;
-
-            mLeft.stop();
-            mRight.backward();
+            steeringAngle = Math.max(steeringAngle - STEERING_STEP, -100);
+            runtime.motorController.setBaseSpeed(100);
         } else if (rightReading < leftReading && rightReading < centerReading) {
             LCDHelper.appendingToDisplay("Turn Right", false, 1);
-            // steeringAngle = Math.max(steeringAngle - STEERING_STEP, -100);
-            // steeringAngle = -100;
-
-            mLeft.backward();
-            mRight.stop();
+            steeringAngle = Math.min(steeringAngle + STEERING_STEP, 100);
+            runtime.motorController.setBaseSpeed(100);
         } else {
             LCDHelper.appendingToDisplay("Go Straight", false, 1);
-            // steeringAngle = 0;
-            // steeringDurationFactor = 0;
-
-            mLeft.backward();
-            mRight.backward();
+            steeringAngle = 0;
+            runtime.motorController.setBaseSpeed(500);
         }
 
-        // steeringDurationFactor += 1;
-
-        // if (Math.abs(steeringAngle) == MAX_STEERING_ANGLE && steeringDurationFactor > 10) {
-            
-        // }
-
-        // runtime.motorController.moveWithAngle(steeringAngle);
-
-        // if (10 < Math.abs(leftReading - rightReading) && 10 < Math.abs(leftReading - centerReading) && 10 < Math.abs(rightReading - centerReading)) {
-        //     LCDHelper.appendingToDisplay("Small differences", false, 3);
-        // }
+        runtime.motorController.moveWithAngle(steeringAngle);
 
         LCDHelper.appendingToDisplay("L: " + leftReading + "\nR: " + rightReading + "\nC: " + centerReading, false, 2);
         return true;
