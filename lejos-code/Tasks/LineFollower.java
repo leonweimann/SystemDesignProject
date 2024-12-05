@@ -22,6 +22,12 @@ public class LineFollower extends Task {
         runtime.motorController.moveWithAngle(steeringAngle);
     }
 
+    @Override
+    public void terminate() {
+        super.terminate();
+        runtime.motorController.stop();
+    }
+
     private Symbol currentSymbol() {
         return runtime.lightController.readSymbol();
     }
