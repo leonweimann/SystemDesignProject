@@ -3,23 +3,31 @@ package Tasks;
 import Coordination.RuntimeCoordinator;
 
 public abstract class Task {
-    public RuntimeCoordinator runtime = RuntimeCoordinator.getInstance();
+    public Task(RuntimeCoordinator runtime) {
+        this.runtime = runtime;
+    }
 
-    private boolean execute = true;
+    protected RuntimeCoordinator runtime;
 
-    public void run() {
-        if (execute) {
+    public abstract void main();
+
+    public final void run() {
+        if (isExecuting()) {
             main();
         }
     }
-    
-    public abstract void main();
+
+    private boolean execute = true;
+
+    public void terminate() {
+        execute = false;
+    }
 
     public void start() {
         execute = true;
     }
 
-    public void terminate() {
-        execute = false;
+    public boolean isExecuting() {
+        return execute;
     }
 }

@@ -1,9 +1,15 @@
 package Tasks;
 
+import Coordination.LCDHelper;
+import Coordination.RuntimeCoordinator;
 import Models.Direction;
 import Models.Symbol;
 
 public class LineFollower extends Task {
+    public LineFollower(RuntimeCoordinator runtime) {
+        super(runtime);
+    }
+
     private static final int STEERING_STEP = 10;
 
     private int steeringAngle = 0;
@@ -23,6 +29,9 @@ public class LineFollower extends Task {
     private void correctSteeringAngle(Symbol current) {
         Direction direction = movingDirection(current);
         steeringAngle = newMovingAngle(direction);
+        
+        LCDHelper.appendingToDisplay(direction.toString(), false, 2);
+        LCDHelper.appendingToDisplay("Steering Angle: " + steeringAngle, false, 3);
     }
 
     private Direction movingDirection(Symbol current) {

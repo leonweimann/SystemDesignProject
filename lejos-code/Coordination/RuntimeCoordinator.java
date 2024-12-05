@@ -36,7 +36,7 @@ public final class RuntimeCoordinator {
      * 
      * @return the singleton instance of {@code RuntimeCoordinator}
      */
-    public static RuntimeCoordinator getInstance() {
+    public static RuntimeCoordinator getInstance() { // TODO: Remove Singleton pattern ...
         if (instance == null) {
             instance = new RuntimeCoordinator();
         }
@@ -47,7 +47,7 @@ public final class RuntimeCoordinator {
      * Private constructor to initialize the controllers.
      */
     private RuntimeCoordinator() {
-        taskCoordinator = new TaskCoordinator();
+        taskCoordinator = new TaskCoordinator(this);
         motorController = new MotorController(Ports.MOTOR_LEFT, Ports.MOTOR_RIGHT);
         touchController = new TouchController(Ports.TOUCH_SENSOR);
         lightController = new LightFluctuationController(Ports.LIGHT_SENSOR_LEFT, Ports.LIGHT_SENSOR_RIGHT,

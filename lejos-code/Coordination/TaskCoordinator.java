@@ -2,24 +2,29 @@ package Coordination;
 
 import Tasks.*;
 
-public class TaskCoordinator {
-    public TaskCoordinator() {
+public final class TaskCoordinator {
+    public TaskCoordinator(RuntimeCoordinator runtime) {
+        this.runtime = runtime;
+        this.lineFollower = new LineFollower(runtime);
+        this.symbolFetching = new SymbolFetching(runtime);
     }
 
-    private RuntimeCoordinator runtime = RuntimeCoordinator.getInstance();
+    private LineFollower lineFollower;
+    private SymbolFetching symbolFetching;
 
-    private LineFollower lineFollower = new LineFollower();
-    private SymbolFetching symbolFetching = new SymbolFetching();
+    private RuntimeCoordinator runtime;
+
+    private boolean terminateRequired = false;
 
     public void executeFrequent() {
-        lineFollower.run();
+        LCDHelper.resetAppendedItems();
+        if (!terminateRequired) {
+            lineFollower.main();
+            symbolFetching.main();
+        }
     }
 
     public void executeCrutial() {
-        if (runtime.touchController.obstacleFound()) {
-            lineFollower.terminate();
-        } else {
-            lineFollower.start();
-        }
+        terminateRequired = runtime.touchController.obstacleFound();
     }
 }
