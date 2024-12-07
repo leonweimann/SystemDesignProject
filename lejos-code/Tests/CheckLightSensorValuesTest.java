@@ -3,8 +3,7 @@ package Tests;
 import Config.Ports;
 import Coordination.LCDHelper;
 import Coordination.RuntimeCoordinator;
-
-import java.util.LinkedList;
+import lejos.nxt.Button;
 import lejos.nxt.LightSensor;
 
 public class CheckLightSensorValuesTest extends Test {
@@ -17,9 +16,10 @@ public class CheckLightSensorValuesTest extends Test {
     private int steeringAngle = 0;
     private static final int STEERING_STEP = 20;
 
-    private static final int FLUCTUATION_BUFFER = 10;
-    private static final int MAX_AGE_MS = 3000;
-    private LinkedList<LightSensorValue> centerValues = new LinkedList<>();
+    private static final int FLUCTUATION_BUFFER = 5;
+    private static final int MAX_AGE_MS = 5000;
+    private LightSensorValue[] centerValues = new LightSensorValue[getMaxCenterValueSize()];
+    private int centerValuesIndex = 0;
 
     private class LightValues {
         int left;
@@ -36,10 +36,12 @@ public class CheckLightSensorValuesTest extends Test {
     private class LightSensorValue {
         int value;
         long timestamp;
+        Boolean isBlack;
 
-        LightSensorValue(int value, long timestamp) {
+        LightSensorValue(int value, long timestamp, Boolean isBlack) {
             this.value = value;
             this.timestamp = timestamp;
+            this.isBlack = isBlack;
         }
     }
 
@@ -83,71 +85,94 @@ public class CheckLightSensorValuesTest extends Test {
         LCDHelper.appendingToDisplay(
                 "L: " + lightValues.left + "\nR: " + lightValues.right + "\nC: " + lightValues.center, false, 2);
 
-        updateCenterValues(lightValues.center);
+        updateCenterValues(lightValues);
 
         // // Line following logic
         if (lightValues.left < lightValues.right && lightValues.left < lightValues.center) {
             LCDHelper.appendingToDisplay("Turn Left", false, 1);
             steeringAngle = Math.max(steeringAngle - STEERING_STEP, -100);
-            runtime.motorController.setBaseSpeed(100);
         } else if (lightValues.right < lightValues.left && lightValues.right < lightValues.center) {
             LCDHelper.appendingToDisplay("Turn Right", false, 1);
             steeringAngle = Math.min(steeringAngle + STEERING_STEP, 100);
-            runtime.motorController.setBaseSpeed(100);
         } else {
             LCDHelper.appendingToDisplay("Go Straight", false, 1);
             steeringAngle = 0;
-            runtime.motorController.setBaseSpeed(200);
         }
 
-        runtime.motorController.moveWithAngle(steeringAngle);
+        // runtime.motorController.moveWithAngle(steeringAngle);
 
-        LinePattern linePattern = analyzeCenterValues(lightValues);
+        LinePattern linePattern = analyzeCenterValues();
         LCDHelper.appendingToDisplay("Line Pattern: " + linePattern, false, 3);
 
         return true;
     }
 
-    private void updateCenterValues(int value) {
+    private void updateCenterValues(LightValues values) {
         long currentTime = System.currentTimeMillis();
-        centerValues.add(new LightSensorValue(value, currentTime));
+        centerValues[centerValuesIndex] = new LightSensorValue(values.center, currentTime, couldBeBlack(null, values));
+        centerValuesIndex = (centerValuesIndex + 1) % getMaxCenterValueSize();
 
         // Remove old values
-        for (LightSensorValue sensorValue : centerValues) {
-            if (currentTime - sensorValue.timestamp > MAX_AGE_MS) {
-                centerValues.remove(sensorValue);
+        for (int i = 0; i < getMaxCenterValueSize(); i++) {
+            if (centerValues[i] != null && currentTime - centerValues[i].timestamp > MAX_AGE_MS) {
+                centerValues[i] = null;
             }
         }
     }
 
-    private LinePattern analyzeCenterValues(LightValues lightValues) {
-        int whiteCount = 0;
-        int blackCount = 0;
-        boolean inWhiteSection = false;
-        boolean inBlackSection = false;
+    private static int getMaxCenterValueSize() {
+        return MAX_AGE_MS / 1000 * RuntimeCoordinator.EXCECUTION_FREQUENCY;
+    }
 
-        for (LightSensorValue sensorValue : centerValues) {
-            if (sensorValue.value > lightValues.left + FLUCTUATION_BUFFER && sensorValue.value > lightValues.right + FLUCTUATION_BUFFER) {
-                whiteCount++;
-                if (!inWhiteSection) {
-                    inWhiteSection = true;
-                    inBlackSection = false;
-                }
-            } else if (sensorValue.value < lightValues.left - FLUCTUATION_BUFFER && sensorValue.value < lightValues.right - FLUCTUATION_BUFFER) {
-                blackCount++;
-                if (!inBlackSection) {
-                    inBlackSection = true;
-                    inWhiteSection = false;
-                }
+    private int getCenterValuesSize() {
+        int size = 0;
+        for (LightSensorValue value : centerValues) {
+            if (value != null) {
+                size++;
             }
         }
+        return size;
+    }
 
-        if (whiteCount > 10) {
-            return LinePattern.LONG_WHITE_SECTION;
-        } else if (blackCount > 2 && whiteCount > 0) {
-            return LinePattern.SHORT_BLACK_SECTIONS;
+    private LinePattern analyzeCenterValues() {
+        if (centerValues[getCenterValuesSize()] != null) {
+            LCDHelper.appendingToDisplay("Black? " + centerValues[getCenterValuesSize()].isBlack, false,
+                    currentTestCount);
         } else {
-            return LinePattern.DEFAULT_LINE;
+            LCDHelper.appendingToDisplay("Black? null", false, currentTestCount);
         }
+
+        return LinePattern.DEFAULT_LINE;
+    }
+
+    /**
+     * 
+     * @param checkingCoded null -> center; false -> left; true -> right
+     * @param values
+     * @return null -> unsure; true -> black; false -> white
+     */
+    private Boolean couldBeBlack(Boolean checkingCoded, LightValues values) {
+        int val, com1, com2;
+        if (checkingCoded == null) {
+            val = values.center;
+            com1 = values.left;
+            com2 = values.right;
+        } else if (checkingCoded) {
+            val = values.right;
+            com1 = values.left;
+            com2 = values.center;
+        } else {
+            val = values.left;
+            com1 = values.center;
+            com2 = values.right;
+        }
+
+        if (val < com1 - FLUCTUATION_BUFFER && val < com2 - FLUCTUATION_BUFFER) {
+            return true;
+        } else if (val > com1 - FLUCTUATION_BUFFER && val > com2 - FLUCTUATION_BUFFER) {
+            return false;
+        }
+
+        return null;
     }
 }
