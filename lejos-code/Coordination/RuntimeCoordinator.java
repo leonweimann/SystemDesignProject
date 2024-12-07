@@ -89,7 +89,7 @@ public final class RuntimeCoordinator {
         System.out.println("Executing setup phase 1...");
         // Add setup phase 1 logic here
 
-        lightController.calibrateSensors();
+        lightController.calibrateSensors(); // TODO: Make optional
         System.out.println("Light sensors calibrated");
     }
 
@@ -117,6 +117,7 @@ public final class RuntimeCoordinator {
         while (UserInputHandler.checkForExitSimultaneously()) {
             if (nextExecutionTime < System.currentTimeMillis()) {
                 nextExecutionTime = (long) (System.currentTimeMillis() + getExecutionFrequencyDelay());
+                LCDHelper.resetAppendedItems();
                 taskCoordinator.executeFrequent();
             }
 

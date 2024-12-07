@@ -30,7 +30,7 @@ public class MotorController {
      * The distance {@code (cm)} each wheel travels per full rotation in
      * centimeters.
      */
-    private static final int WHEEL_DIAMETER = 3; // cm
+    private static final int WHEEL_DIAMETER = 4; // cm
 
     /**
      * The width of the robot in centimeters {@code (cm)}.

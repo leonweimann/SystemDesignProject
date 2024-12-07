@@ -4,7 +4,6 @@ import Coordination.LCDHelper;
 import Coordination.RuntimeCoordinator;
 import Coordination.UserInputHandler;
 import lejos.nxt.Button;
-import lejos.nxt.LCD;
 import lejos.util.Delay;
 
 /**

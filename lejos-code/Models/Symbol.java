@@ -1,66 +1,52 @@
 package Models;
 
 /**
- * The {@code Symbol} class represents a kind of tuple with three boolean
- * values, used for representing light sensor values in the
- * LightFluctuationController class.
+ * The {@code Symbol} class represents a symbol that can be detected by the
+ * light sensors. A symbol consists of three parts: the left side, the right
+ * side, and the center. Each part can be either black or white.
+ * 
+ * 
  * 
  * @author leonweimann
- * @version 1.2
+ * @version 2.0
  */
 public class Symbol {
     /**
-     * Creates a new Symbol with the specified sides.
-     * 
-     * @param isLeftBlack  true if the left side is black, false otherwise
-     * @param isRightBlack true if the right side is black, false otherwise
+     * Constructs a Symbol with the specified left, right, and center values.
+     *
+     * @param left   the left value of the Symbol
+     * @param right  the right value of the Symbol
+     * @param center the center value of the Symbol
      */
-    public Symbol(boolean isLeftBlack, boolean isRightBlack, boolean isCenterBlack) {
-        this.isLeftBlack = isLeftBlack;
-        this.isRightBlack = isRightBlack;
-        this.isCenterBlack = isCenterBlack;
-    }
-
-    private boolean isLeftBlack;
-    private boolean isRightBlack;
-    private boolean isCenterBlack;
-
-    /**
-     * Returns whether the left side of the symbol is black.
-     * 
-     * @return true if the left side is black, false otherwise
-     */
-    public boolean isLeftBlack() {
-        return isLeftBlack;
+    public Symbol(int left, int right, int center) {
+        this(left, right, center, false);
     }
 
     /**
-     * Returns whether the right side of the symbol is black.
+     * Constructs a new Symbol with the given left, right, and center values.
      * 
-     * @return true if the right side is black, false otherwise
+     * @param left   the left value of the symbol
+     * @param right  the right value of the symbol
+     * @param center the center value of the symbol
+     * @param withTimestamp whether to include a timestamp
      */
-    public boolean isRightBlack() {
-        return isRightBlack;
+    public Symbol(int left, int right, int center, boolean withTimestamp) {
+        this.left = left;
+        this.right = right;
+        this.center = center;
+        this.timestamp = withTimestamp ? System.currentTimeMillis() : null;
     }
 
-    /**
-     * Returns whether the center of the symbol is black.
-     * 
-     * @return true if the center is black, false otherwise
-     */
-    public boolean isCenterBlack() {
-        return isCenterBlack;
-    }
+    public final int left, right, center;
+    public final Long timestamp;
 
     /**
-     * Compares this Symbol to another Symbol.
-     * 
-     * @param other the Symbol to compare to
-     * @return true if the two Symbols are equal, false otherwise
+     * Checks if the symbol has a timestamp.
+     *
+     * @return true if the symbol has a timestamp, false otherwise.
      */
-    public boolean equals(Symbol other) {
-        return this.isLeftBlack == other.isLeftBlack && this.isRightBlack == other.isRightBlack
-                && this.isCenterBlack == other.isCenterBlack;
+    public boolean isTimestamped() {
+        return timestamp != null;
     }
 
     /**
@@ -69,6 +55,6 @@ public class Symbol {
      * @return a string representation of this Symbol
      */
     public String debugDescription() {
-        return "L: " + isLeftBlack + "\nR: " + isRightBlack + "\nC: " + isCenterBlack;
+        return "L: " + left + "\nR: " + right + "\nC: " + center;
     }
 }

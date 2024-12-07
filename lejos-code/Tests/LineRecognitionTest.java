@@ -1,8 +1,8 @@
 package Tests;
 
+import Coordination.LCDHelper;
 import Coordination.RuntimeCoordinator;
 import Models.Symbol;
-import lejos.nxt.LCD;
 import Controlling.LightFluctuationController;
 
 /**
@@ -11,7 +11,7 @@ import Controlling.LightFluctuationController;
  * in recognizing lines using light sensors.
  * 
  * @author leonweimann
- * @version 1.4
+ * @version 1.5
  */
 public class LineRecognitionTest extends Test {
     private LightFluctuationController controller = RuntimeCoordinator.getInstance().lightController;
@@ -24,12 +24,7 @@ public class LineRecognitionTest extends Test {
     @Override
     protected boolean executionLoop() {
         Symbol symbol = controller.readSymbol();
-
-        LCD.clear();
-        LCD.drawString("L: " + symbol.isLeftBlack(), 0, 1);
-        LCD.drawString("C: " + symbol.isCenterBlack(), 0, 2);
-        LCD.drawString("R: " + symbol.isRightBlack(), 0, 3);
-
+        LCDHelper.display(symbol.debugDescription());
         return true; // Continue execution
     }
 }
