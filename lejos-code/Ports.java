@@ -1,4 +1,4 @@
-package Config;
+
 
 import lejos.nxt.SensorPort;
 import lejos.nxt.MotorPort;

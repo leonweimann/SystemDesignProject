@@ -1,4 +1,4 @@
-package Models;
+
 
 /**
  * The {@code Symbol} class represents a symbol that can be detected by the
