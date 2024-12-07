@@ -5,7 +5,7 @@ package Tests;
  */
 public class RunTest {
     public static void main(String[] args) {
-        Test test = new CheckLightSensorValuesTest(); // Change this line to run a different test
+        Test test = new RotateRobotTest(); // Change this line to run a different test
         test.boot();
     }
 }

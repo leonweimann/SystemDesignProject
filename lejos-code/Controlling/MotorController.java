@@ -13,18 +13,17 @@ import lejos.util.Delay;
  * It also includes methods for gradual and immediate stops.
  * 
  * @author leonweimann
- * @version 2.3
+ * @version 2.4
  */
 public class MotorController {
-    private DrivingMotor leftMotor;
-    private DrivingMotor rightMotor;
+    public DrivingMotor leftMotor;
+    public DrivingMotor rightMotor;
 
     /**
      * The default speed for the motor controller.
      * This value is used when no other speed is specified.
      */
-    private static final int DEFAULT_SPEED = 100; // TODO: Reset to 500 after line follower development
-    private int baseSpeed = DEFAULT_SPEED;
+    private static final int DEFAULT_SPEED = 200; // TODO: Reset to 500 after line follower development
 
     /**
      * The distance {@code (cm)} each wheel travels per full rotation in
@@ -62,14 +61,6 @@ public class MotorController {
         return leftMotor.isMoving() || rightMotor.isMoving();
     }
 
-    public void setBaseSpeed(int speed) {
-        baseSpeed = speed;
-    }
-
-    public void resetBaseSpeed() {
-        baseSpeed = DEFAULT_SPEED;
-    }
-
     /**
      * Sets the speed for both motors.
      * 
@@ -84,7 +75,6 @@ public class MotorController {
      * Resets the speeds of both motors to the default speed.
      */
     public void resetSpeeds() {
-        baseSpeed = DEFAULT_SPEED;
         leftMotor.setSpeed(DEFAULT_SPEED);
         rightMotor.setSpeed(DEFAULT_SPEED);
     }
@@ -104,14 +94,14 @@ public class MotorController {
         angle = Math.max(-90, Math.min(90, angle));
 
         if (angle < 0) { // Turn left
-            leftSpeed = (int) (baseSpeed * (1.0 + angle / 100.0));
-            rightSpeed = baseSpeed;
+            leftSpeed = (int) (DEFAULT_SPEED * (1.0 + angle / 100.0));
+            rightSpeed = DEFAULT_SPEED;
         } else if (angle > 0) { // Turn right
-            leftSpeed = baseSpeed;
-            rightSpeed = (int) (baseSpeed * (1.0 - angle / 100.0));
+            leftSpeed = DEFAULT_SPEED;
+            rightSpeed = (int) (DEFAULT_SPEED * (1.0 - angle / 100.0));
         } else { // Move straight
-            leftSpeed = baseSpeed;
-            rightSpeed = baseSpeed;
+            leftSpeed = DEFAULT_SPEED;
+            rightSpeed = DEFAULT_SPEED;
         }
 
         leftMotor.setSpeed(leftSpeed);
@@ -130,9 +120,25 @@ public class MotorController {
         resetSpeeds();
     }
 
+    public void rotateMotors(boolean leftHanded) {
+        stop();
+        setSpeeds(150);
+
+        if (leftHanded) {
+            leftMotor.backward();
+            rightMotor.forward();
+        } else {
+            leftMotor.forward();
+            rightMotor.backward();
+        }
+
+        Delay.msDelay(1000);
+        stop();
+    }
+
     public void rotate(int angle) {
         if (rotationEndTime == null) {
-            final int ROTATION_SPEED = 250; // [Degrees / Second] // Custom speed for rotation TODO: Adjust
+            final int ROTATION_SPEED = 125; // [Degrees / Second] // Custom speed for rotation TODO: Adjust
             setSpeeds(ROTATION_SPEED);
 
             int normalizedAngle = Math.abs(angle) % 360; // Normalize angle to the range [0, 360)

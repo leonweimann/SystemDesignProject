@@ -12,15 +12,15 @@ public final class TaskCoordinator {
 
     private RuntimeCoordinator runtime;
 
-    private boolean terminateRequired = false;
-
     public void executeFrequent() {
-        if (!terminateRequired) {
-            lineFollower.main();
-        }
+        lineFollower.run();
     }
 
     public void executeCrutial() {
-        terminateRequired = runtime.touchController.obstacleFound();
+        if (runtime.touchController.obstacleFound()) {
+            lineFollower.terminate();
+        } else {
+            lineFollower.start();
+        }
     }
 }

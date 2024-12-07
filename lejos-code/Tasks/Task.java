@@ -9,10 +9,10 @@ public abstract class Task {
 
     protected RuntimeCoordinator runtime;
 
-    public abstract void main();
+    protected abstract void main();
 
     public final void run() {
-        if (isExecuting()) {
+        if (execute) {
             main();
         }
     }

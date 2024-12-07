@@ -2,6 +2,7 @@ package Coordination;
 
 import Config.Ports;
 import Controlling.*;
+import lejos.nxt.Button;
 import lejos.util.Delay;
 
 /**
@@ -66,7 +67,11 @@ public final class RuntimeCoordinator {
      * Boots the robot by executing the necessary setup phases.
      */
     private void boot() {
-        System.out.println("Starting robot...");
+        LCDHelper.clear();
+        LCDHelper.resetAppendedItems();
+        LCDHelper.appendingToDisplay("Booting robot ...", false, 1);
+
+        Delay.msDelay(1000);
 
         // Setup phase 1
         setupPhase1();
@@ -77,27 +82,49 @@ public final class RuntimeCoordinator {
         // Setup phase 3
         setupPhase3();
 
-        System.out.println("Ready for take off");
+        LCDHelper.appendingToDisplay("Booting completed!", false, 6);
+        LCDHelper.resetAppendedItems();
+        LCDHelper.display("Ready to take off", true);
         UserInputHandler.awaitContinueOrExit();
-        System.out.println("> Started");
+        LCDHelper.clear();
     }
 
     /**
      * Executes the first setup phase, including the calibration of light sensors.
      */
     private void setupPhase1() {
-        System.out.println("Executing setup phase 1...");
+        LCDHelper.appendingToDisplay("Executing setup phase 1...", false, 2);
         // Add setup phase 1 logic here
 
-        lightController.calibrateSensors(); // TODO: Make optional
-        System.out.println("Light sensors calibrated");
+        LCDHelper.display("Press\nRIGHT\nto recalibrate\nlight sensors", true);
+        long startTime = System.currentTimeMillis();
+        long nextRefreshTime = 0;
+        while (System.currentTimeMillis() < startTime + 5000) {
+            double remainingTime = 5 - (System.currentTimeMillis() - startTime) / 1000.0;
+            double remainingTimeRounded = Math.round(remainingTime * 10) / 10.0;
+
+            if (System.currentTimeMillis() > nextRefreshTime) {
+                LCDHelper.resetAppendedItems();
+                LCDHelper.appendingToDisplay("Remaining " + remainingTimeRounded + "s", true, 42);
+                nextRefreshTime = System.currentTimeMillis() + 200;
+            }
+
+            if (UserInputHandler.isButtonPressed(Button.RIGHT)) {
+                while (UserInputHandler.isButtonPressed(Button.RIGHT)) { // Wait for button release
+                }
+                lightController.calibrateSensors();
+                LCDHelper.display("Light sensors calibrated", true);
+                break;
+            }
+        }
+        LCDHelper.clear();
     }
 
     /**
      * Executes the second setup phase.
      */
     private void setupPhase2() {
-        System.out.println("Executing setup phase 2...");
+        LCDHelper.appendingToDisplay("Executing setup phase 2...", false, 4);
         // Add setup phase 2 logic here
     }
 
@@ -105,7 +132,7 @@ public final class RuntimeCoordinator {
      * Executes the third setup phase.
      */
     private void setupPhase3() {
-        System.out.println("Executing setup phase 3...");
+        LCDHelper.appendingToDisplay("Executing setup phase 3...", false, 5);
         // Add setup phase 3 logic here
     }
 

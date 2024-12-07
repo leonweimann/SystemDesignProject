@@ -61,7 +61,7 @@ public class CheckLightSensorValuesTest extends Test {
             steeringAngle = 0;
         }
 
-        // runtime.motorController.moveWithAngle(steeringAngle);
+        runtime.motorController.moveWithAngle(steeringAngle);
 
         return true;
     }

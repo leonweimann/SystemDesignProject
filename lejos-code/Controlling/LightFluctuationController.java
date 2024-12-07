@@ -33,7 +33,8 @@ public class LightFluctuationController {
     // private int symbolIndex = 0; // TODO: Currently never resetted, instead
     // worked with modulo. Could lead to
     // // overflow...
-    // private static final int SYMBOL_BUFFER_SIZE = 8; // TODO: Instead delete after e.g. 5000 ms -> timestamp
+    // private static final int SYMBOL_BUFFER_SIZE = 8; // TODO: Instead delete
+    // after e.g. 5000 ms -> timestamp
 
     public LightFluctuationController(SensorPort leftPort, SensorPort rightPort, SensorPort centerPort) {
         this.leftSensor = new LightSensor(leftPort);
@@ -78,6 +79,13 @@ public class LightFluctuationController {
 
     public boolean shouldTurnRight(Symbol symbol) {
         return symbol.right < symbol.left && symbol.right < symbol.center;
+    }
+
+    public boolean noHugeDifference(Symbol symbol) {
+        final int maxDifference = 15;
+        return Math.abs(symbol.left - symbol.right) < maxDifference
+                && Math.abs(symbol.left - symbol.center) < maxDifference
+                && Math.abs(symbol.right - symbol.center) < maxDifference;
     }
 
     /**
