@@ -21,7 +21,7 @@ public final class RuntimeCoordinator {
      * 
      * In this case, the tasks are executed {@code 5 times per second}.
      */
-    private static final int EXCECUTION_FREQUENCY = 5;
+    public static final int EXCECUTION_FREQUENCY = 5;
 
     public TaskCoordinator taskCoordinator;
     public MotorController motorController;
